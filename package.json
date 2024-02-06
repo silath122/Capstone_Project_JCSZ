@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@patternfly/patternfly": "^5.2.0",
+    "@patternfly/react-core": "^5.2.0"
+  }
+}
