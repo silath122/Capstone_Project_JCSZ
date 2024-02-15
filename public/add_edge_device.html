@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Edge Device</title>
+    <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <style>
+        /* Custom CSS for logo */
+        .navbar-brand .logo {
+            width: 30px; /* Adjust as needed */
+            height: auto;
+            margin-right: 10px;
+            display: inline-block; /* Make logo and text inline */
+        }
+
+        .navbar-brand .text {
+            display: inline-block; /* Make text inline */
+        }
+
+        /* Custom CSS for home button */
+        .navbar-home-button {
+            margin-left: auto; /* Push to the right */
+            margin-right: 20px; /* Add margin to the left to adjust position */
+        }
+
+        /* Custom CSS to set text color of the button */
+        .navbar-home-button .btn-primary {
+            color: #fff !important; /* Set text color to white */
+        }
+        
+        /* Custom CSS to make the button like the submit button */
+        .btn-primary {
+            background-color: #28609e; /* Adjust as needed */
+            border-color: #28609e; /* Adjust as needed */
+            padding: 10px 20px; /* Adjust padding to match the size */
+            font-size: 16px; /* Adjust font size to match the size */
+        }
+
+        .btn-primary:hover {
+            background-color: #204d74 !important; /* Override hover color */
+            border-color: #204d74 !important; /* Override hover color */
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5); /* Adjust as needed */
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img src="chris_logo.png" alt="ChRIS Logo" class="logo">
+                <span class="text">Edge Device Provisioning</span>
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right navbar-home-button">
+            <li>
+                <a href="index.html" class="btn btn-primary btn-rounded">Home</a> <!-- Added btn-rounded class -->
+            </li>
+        </ul>
+    </header>
+    <div class="container">
+        <h1>Add Edge Device</h1>
+        <!-- Add your form or content for adding a device here -->
+        <form>
+            <!-- Add your form fields here -->
+            <div class="form-group">
+                <label for="deviceType">Device Type:</label>
+                <input type="text" class="form-control" id="deviceName" placeholder="Enter device type">
+            </div>
+            <div class="form-group">
+                <label for="deviceSoftware">Device Software:</label>
+                <input type="text" class="form-control" id="deviceName" placeholder="Enter device software">
+            </div>
+            <!-- Add more form fields as needed -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
