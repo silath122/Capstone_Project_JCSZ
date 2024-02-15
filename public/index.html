@@ -17,12 +17,27 @@
             font-size: 24px;
             margin: 0 10px;
         }
+
+        /* Custom CSS for logo image  */
+        .navbar-brand .logo {
+            width: 35px; 
+            height: auto;
+            margin-right: 10px;
+            display: inline-block; /* logo and text inline */
+        }
+
+        .navbar-brand .text {
+            display: inline-block; /* text inline */
+        }
     </style>
 </head>
 <body>
     <header class="navbar navbar-default navbar-static-top">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Edge Device Provisioning</a>
+            <a class="navbar-brand" href="#">
+                <img src="chris_logo.png" alt="ChRIS Logo" class="logo">
+                <span class="text">Edge Device Provisioning</span> <!-- Added span for text -->
+            </a>
         </div>
     </header>
     <div class="container">
