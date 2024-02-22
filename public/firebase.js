@@ -39,9 +39,11 @@ document.getElementById('deviceForm').addEventListener('submit', function (event
     db.collection('edge-devices').doc(deviceType).set(dataToAdd)
         .then(function () {
             console.log('Document successfully written!');
+            alert('Device added successfully!');
         })
         .catch(function (error) {
             console.error('Error adding document: ', error);
+            alert('Failed to add device. Please try again later.');
         });
   });
   
