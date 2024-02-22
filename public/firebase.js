@@ -31,7 +31,7 @@ document.getElementById('deviceForm').addEventListener('submit', function (event
     }
     // Prepare data to be added to Firestore
     var dataToAdd = {
-        name: deviceName + " " + deviceProvider,
+        name: deviceName,
         image: deviceName,
         software: deviceProvider
     };
