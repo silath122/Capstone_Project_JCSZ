@@ -33,7 +33,7 @@ document.getElementById('deviceForm').addEventListener('submit', function (event
     var dataToAdd = {
         name: deviceName,
         image: deviceName,
-        software: deviceProvider
+        provider: deviceProvider
     };
     // Add data to Firestore with the document ID as the device type
     db.collection('edge-devices').doc(deviceName).set(dataToAdd)
