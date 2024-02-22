@@ -22,21 +22,21 @@ var db = firebase.firestore();
 document.getElementById('deviceForm').addEventListener('submit', function (event) {
     event.preventDefault();
     // Get values from the form
-    var deviceType = document.getElementById('deviceType').value.trim();
-    var deviceSoftware = document.getElementById('deviceSoftware').value.trim();
+    var deviceName = document.getElementById('deviceName').value.trim();
+    var deviceProvider = document.getElementById('deviceProvider').value.trim();
     // Check if both fields are filled
-    if (deviceType === '' || deviceSoftware === '') {
+    if (deviceName === '' || deviceProvider === '') {
         alert('Please fill in both device type and device software.');
         return;
     }
     // Prepare data to be added to Firestore
     var dataToAdd = {
-        name: deviceType + " " + deviceSoftware,
-        image: deviceType,
-        software: deviceSoftware
+        name: deviceName + " " + deviceProvider,
+        image: deviceName,
+        software: deviceProvider
     };
     // Add data to Firestore with the document ID as the device type
-    db.collection('edge-devices').doc(deviceType).set(dataToAdd)
+    db.collection('edge-devices').doc(deviceName).set(dataToAdd)
         .then(function () {
             console.log('Document successfully written!');
             alert('Device added successfully!');
