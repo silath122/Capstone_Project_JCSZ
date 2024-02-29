@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Edge Device</title>
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
     <style>
         /* Custom CSS for logo */
         .navbar-brand .logo {
@@ -46,158 +49,30 @@
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
 
-        /* Custom CSS for UNO-137 V2 Small-Size Integrated DIN-Rail IPC with Intel Atom x6413E and x6425RE button */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .container > div {
+            margin: 10px;
+            text-align: center;
+        }
+
+        .container img {
+            width: 200px;
+            height: auto;
+        }
+        /* Custom CSS for UNO-137 V2 Small-Size Integrated DIN-Rail IPC with Intel Atom x6413E and x6425RE button
         .edge-device-uno137-v2-smallsize-integrated-dinrail-ipc-with-intel-atom-x6413e-and-x6425re .edge-devices {
             width: 200px;
             height: auto;
-        }
+        } */
 
-        /* Custom CSS for ThinkEdge SE30 button */
-        .edge-device-thinkedge-se30 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for ThinkEdge SE10 button */
-        .edge-device-thinkedge-se10 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for HP Z Workstation Z2 Small Form Factor G5 Workstation button */
-        .edge-device-hp-z-workstation-z2-small-form-factor-g5-workstation .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Dell PowerEdge XR11 button */
-        .edge-device-dell-poweredge-xr11 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for HPE ProLiant DL110 Gen10 Plus button */
-        .edge-device-hpe-proliant-dl110-gen10-plus .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for HP Z Workstations Z2 Tower G8 button */
-        .edge-device-hp-z-workstations-z2-tower-g8 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for ThinkStation P350 Tiny button */
-        .edge-device-thinkstation-p350-tiny .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for ThinkStation P350 button */
-        .edge-device-thinkstation-p350 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Siemens AG SIMATIC IPC847E button */
-        .edge-device-siemens-ag-simatic-ipc847e .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for ThinkEdge SE50 button */
-        .edge-device-thinkedge-se50 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for HP Z Workstation Z2 Small Form Factor G8 Workstation button */
-        .edge-device-hp-z-workstation-z2-small-form-factor-g8-workstation .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Server TXC300-2UN button */
-        .edge-device-server-txc3002un .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for OnLogic HX500 button */
-        .edge-device-onlogic-hx500 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Cincoze CV-P2102 Panel button */
-        .edge-device-cincoze-cvp2102-panel .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for OnLogic CL250 button */
-        .edge-device-onlogic-cl250 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Siemens AG SIMATIC IPC427E button */
-        .edge-device-siemens-ag-simatic-ipc427e .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Siemens AG SIMATIC IPC627E button */
-        .edge-device-siemens-ag-simatic-ipc627e .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for SuperServer E403-9D-14CN-FRDN13+ button */
-        .edge-device-superserver-e4039d14cnfrdn13 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for NYB NYB1E-E1[]M9 button */
-        .edge-device-nyb-nyb1ee1m9 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Siemens AG SIMATIC IPC677E button */
-        .edge-device-siemens-ag-simatic-ipc677e .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for AEWIN Technologies SCB-1937A button */
-        .edge-device-aewin-technologies-scb1937a .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Siemens AG SIMATIC IPC227E button */
-        .edge-device-siemens-ag-simatic-ipc227e .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Regular Fanless DIN Rail Controller with 11th gen Intel Core i processor UNO-148 button */
-        .edge-device-regular-fanless-din-rail-controller-with-11th-gen-intel-core-i-processor-uno148 .edge-devices {
-            width: 200px;
-            height: auto;
-        }
-
-        /* Custom CSS for Western Digital Ultrastar Edge Transportable Edge Server button */
-        .edge-device-western-digital-ultrastar-edge-transportable-edge-server .edge-devices {
-            width: 200px;
-            height: auto;
-        }
     </style>
 </head>
-<body>
+<body onload="fetchEdgeDevices()">
     <header class="navbar navbar-default navbar-static-top">
         <div class="navbar-header">
             <a class="navbar-brand" href="index.html">
@@ -211,102 +86,7 @@
             </li>
         </ul>
     </header>
-    <div class="container">
-        <h1>Select an Edge Device</h1>
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-uno137-v2-smallsize-integrated-dinrail-ipc-with-intel-atom-x6413e-and-x6425re" href="uno137_v2_smallsize_integrated_dinrail_ipc_with_intel_atom_x6413e_and_x6425re.html">
-            <img src="uno137_v2_smallsize_integrated_dinrail_ipc_with_intel_atom_x6413e_and_x6425re.png" alt="UNO-137 V2 Small-Size Integrated DIN-Rail IPC with Intel Atom x6413E and x6425RE" class="edge-devices">
-        </a>
-        <a class="edge-device-thinkedge-se30" href="thinkedge_se30.html">
-            <img src="thinkedge_se30.png" alt="ThinkEdge SE30" class="edge-devices">
-        </a>
-        <a class="edge-device-thinkedge-se10" href="thinkedge_se10.html">
-            <img src="thinkedge_se10.png" alt="ThinkEdge SE10" class="edge-devices">
-        </a>
-        <a class="edge-device-hp-z-workstation-z2-small-form-factor-g5-workstation" href="hp_z_workstation_z2_small_form_factor_g5_workstation.html">
-            <img src="hp_z_workstation_z2_small_form_factor_g5_workstation.png" alt="HP Z Workstation Z2 Small Form Factor G5 Workstation" class="edge-devices">
-        </a>
-    </div>
-    <div class="container">
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-dell-poweredge-xr11" href="dell_poweredge_xr11.html">
-            <img src="dell_poweredge_xr11.png" alt="Dell PowerEdge XR11" class="edge-devices">
-        </a>
-        <a class="edge-device-hpe-proliant-dl110-gen10-plus" href="hpe_proliant_dl110_gen10_plus.html">
-            <img src="hpe_proliant_dl110_gen10_plus.png" alt="HPE ProLiant DL110 Gen10 Plus" class="edge-devices">
-        </a>
-        <a class="edge-device-hp-z-workstations-z2-tower-g8" href="hp_z_workstations_z2_tower_g8.html">
-            <img src="hp_z_workstations_z2_tower_g8.png" alt="HP Z Workstations Z2 Tower G8" class="edge-devices">
-        </a>
-        <a class="edge-device-thinkstation-p350-tiny" href="thinkstation_p350_tiny.html">
-            <img src="thinkstation_p350_tiny.png" alt="ThinkStation P350 Tiny" class="edge-devices">
-        </a>
-    </div>
-    <div class="container">
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-thinkstation-p350" href="thinkstation_p350.html">
-            <img src="thinkstation_p350.png" alt="ThinkStation P350" class="edge-devices">
-        </a>
-        <a class="edge-device-siemens-ag-simatic-ipc847e" href="siemens_ag_simatic_ipc847e.html">
-            <img src="siemens_ag_simatic_ipc847e.png" alt="Siemens AG SIMATIC IPC847E" class="edge-devices">
-        </a>
-        <a class="edge-device-thinkedge-se50" href="thinkedge_se50.html">
-            <img src="thinkedge_se50.png" alt="ThinkEdge SE50" class="edge-devices">
-        </a>
-        <a class="edge-device-hp-z-workstation-z2-small-form-factor-g8-workstation" href="hp_z_workstation_z2_small_form_factor_g8_workstation.html">
-            <img src="hp_z_workstation_z2_small_form_factor_g8_workstation.png" alt="HP Z Workstation Z2 Small Form Factor G8 Workstation" class="edge-devices">
-        </a>
-    </div>
-    <div class="container">
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-server-txc3002un" href="server_txc3002un.html">
-            <img src="server_txc3002un.png" alt="Server TXC300-2UN" class="edge-devices">
-        </a>
-        <a class="edge-device-onlogic-hx500" href="onlogic_hx500.html">
-            <img src="onlogic_hx500.png" alt="OnLogic HX500" class="edge-devices">
-        </a>
-        <a class="edge-device-cincoze-cvp2102-panel" href="cincoze_cvp2102_panel.html">
-            <img src="cincoze_cvp2102_panel.png" alt="Cincoze CV-P2102 Panel" class="edge-devices">
-        </a>
-        <a class="edge-device-onlogic-cl250" href="onlogic_cl250.html">
-            <img src="onlogic_cl250.png" alt="OnLogic CL250" class="edge-devices">
-        </a>
-    </div>
-    <div class="container">
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-siemens-ag-simatic-ipc427e" href="siemens_ag_simatic_ipc427e.html">
-            <img src="siemens_ag_simatic_ipc427e.png" alt="Siemens AG SIMATIC IPC427E" class="edge-devices">
-        </a>
-        <a class="edge-device-siemens-ag-simatic-ipc627e" href="siemens_ag_simatic_ipc627e.html">
-            <img src="siemens_ag_simatic_ipc627e.png" alt="Siemens AG SIMATIC IPC627E" class="edge-devices">
-        </a>
-        <a class="edge-device-superserver-e4039d14cnfrdn13" href="superserver_e4039d14cnfrdn13.html">
-            <img src="superserver_e4039d14cnfrdn13.png" alt="SuperServer E403-9D-14CN-FRDN13+" class="edge-devices">
-        </a>
-        <a class="edge-device-nyb-nyb1ee1m9" href="nyb_nyb1ee1m9.html">
-            <img src="nyb_nyb1ee1m9.png" alt="NYB NYB1E-E1[]M9" class="edge-devices">
-        </a>
-    </div>
-    <div class="container">
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-siemens-ag-simatic-ipc677e" href="siemens_ag_simatic_ipc677e.html">
-            <img src="siemens_ag_simatic_ipc677e.png" alt="Siemens AG SIMATIC IPC677E" class="edge-devices">
-        </a>
-        <a class="edge-device-aewin-technologies-scb1937a" href="aewin_technologies_scb1937a.html">
-            <img src="aewin_technologies_scb1937a.png" alt="AEWIN Technologies SCB-1937A" class="edge-devices">
-        </a>
-        <a class="edge-device-siemens-ag-simatic-ipc227e" href="siemens_ag_simatic_ipc227e.html">
-            <img src="siemens_ag_simatic_ipc227e.png" alt="Siemens AG SIMATIC IPC227E" class="edge-devices">
-        </a>
-        <a class="edge-device-regular-fanless-din-rail-controller-with-11th-gen-intel-core-i-processor-uno148" href="regular_fanless_din_rail_controller_with_11th_gen_intel_core_i_processor_uno148.html">
-            <img src="regular_fanless_din_rail_controller_with_11th_gen_intel_core_i_processor_uno148.png" alt="Regular Fanless DIN Rail Controller with 11th gen Intel Core i processor UNO-148" class="edge-devices">
-        </a>
-    </div>
-    <div class="container">
-        <!-- Add selectable edge devices here -->
-        <a class="edge-device-western-digital-ultrastar-edge-transportable-edge-server" href="western_digital_ultrastar_edge_transportable_edge_server.html">
-            <img src="western_digital_ultrastar_edge_transportable_edge_server.png" alt="Western Digital Ultrastar Edge Transportable Edge Server" class="edge-devices">
-        </a>
-    </div>
+    <div id="edge-devices-container" class="container"></div>
+    <script src="firebase.js"></script>
 </body>
 </html>
