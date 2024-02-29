@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Details</title> /* Need to be able to get device name and display it when selected */
+    <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    <!-- Your custom script comes after including Firebase -->
+    <style>
+        /* Custom CSS for logo */
+        .navbar-brand .logo {
+            width: 30px; /* Adjust as needed */
+            height: auto;
+            margin-right: 10px;
+            display: inline-block; /* Make logo and text inline */
+        }
+
+        .navbar-brand .text {
+            display: inline-block; /* Make text inline */
+        }
+
+        /* Custom CSS for home button */
+        .navbar-home-button {
+            margin-left: auto; /* Push to the right */
+            margin-right: 20px; /* Add margin to the left to adjust position */
+        }
+
+        /* Custom CSS to set text color of the button */
+        .navbar-home-button .btn-primary {
+            color: #fff !important; /* Set text color to white */
+        }
+
+        .btn-primary:hover {
+            background-color: #204d74 !important; /* Override hover color */
+            border-color: #204d74 !important; /* Override hover color */
+        }
+
+        .btn-primary:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5); /* Adjust as needed */
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">
+                <img src="chris_logo.png" alt="ChRIS Logo" class="logo">
+                <span class="text">Device Details</span> /* Need to be able to get device name and display it when selected */
+            </a>
+        </div>
+        <ul class="nav navbar-nav navbar-right navbar-home-button">
+            <li>
+                <a href="index.html" class="btn btn-primary btn-rounded">Back</a> <!-- Added btn-rounded class -->
+            </li>
+        </ul>
+    </header>
+    <script src="firebase.js"></script>
+</body>
+</html>
+
