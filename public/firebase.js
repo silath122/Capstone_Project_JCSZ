@@ -52,41 +52,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Function to fetch edge devices from Firestore for "select_edge_device.html"
 function fetchEdgeDevices() {
-    var container = document.getElementById("edge-devices-container");
-    if (!container) return; // Check if container exists
-    container.innerHTML = ''; // Clear previous content
-    db.collection("edge-devices").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // HTML elements for each edge device and it's attributes in the collection
-            var deviceData = doc.data();
-            var deviceName = deviceData.name;
-            var deviceImage = deviceData.image;
-            var deviceProvider = deviceData.provider;
+  var container = document.getElementById("edge-devices-container");
+  if (!container) return; // Check if container exists
+  container.innerHTML = ''; // Clear previous content
+  db.collection("edge-devices").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          // HTML elements for each edge device and its attributes in the collection
+          var deviceData = doc.data();
+          var deviceName = deviceData.name;
+          var deviceProvider = deviceData.provider;
 
-            // Create elements
-            var deviceDiv = document.createElement("div");
-            var deviceLink = document.createElement("a");
-            var deviceImg = document.createElement("img");
-            var deviceNameVar = document.createElement("p")
-            var deviceProviderVar = document.createElement("p");
+          // Create elements
+          var deviceDiv = document.createElement("div");
+          var deviceLink = document.createElement("a");
+          var deviceImg = document.createElement("img");
+          var deviceNameVar = document.createElement("p");
+          var deviceProviderVar = document.createElement("p");
 
-            // Set attributes and content
-            deviceLink.href = "device_details.html?device=" + deviceName;
-            deviceImg.src = deviceImage;
-            deviceImg.alt = deviceName;
-            deviceImg.classList.add("edge-devices");
-            deviceNameVar.textContent = "" + deviceName;
-            deviceProviderVar.textContent = "Provider: " + deviceProvider;
+          // Set attributes and content
+          deviceLink.href = "device_details.html?device=" + deviceName;
 
-            // Append elements
-            deviceLink.appendChild(deviceImg);
-            deviceDiv.appendChild(deviceLink);
-            deviceDiv.appendChild(deviceNameVar);
-            deviceDiv.appendChild(deviceProviderVar);
-            container.appendChild(deviceDiv);
+          // Fetch the image link from provider-image-links collection based on the provider name
+          db.collection("provider-image-links").doc(deviceProvider).get().then((providerDoc) => {
+              if (providerDoc.exists) {
+                  var providerData = providerDoc.data();
+                  var providerImage = providerData.imageLink;
 
-        });
-    }).catch((error) => {
-        console.error("Error fetching devices: ", error);
-    });
+                  // Set the image URL for the device
+                  deviceImg.src = providerImage;
+              } else {
+                  // Handle the case where no image link is found for the provider
+                  deviceImg.src = "https://firebasestorage.googleapis.com/v0/b/edge--devices-for-chrisinabox.appspot.com/o/no_image.png?alt=media&token=4692339f-7f88-4a05-9654-9c27d220ff42"; // Provide a default image link
+              }
+
+              // Set other attributes and content
+              deviceImg.alt = deviceName;
+              deviceImg.classList.add("edge-devices");
+              deviceNameVar.textContent = "" + deviceName;
+              deviceProviderVar.textContent = "Provider: " + deviceProvider;
+
+              // Append elements
+              deviceLink.appendChild(deviceImg);
+              deviceDiv.appendChild(deviceLink);
+              deviceDiv.appendChild(deviceNameVar);
+              deviceDiv.appendChild(deviceProviderVar);
+              container.appendChild(deviceDiv);
+          }).catch((error) => {
+              console.error("Error fetching provider image link: ", error);
+          });
+      });
+  }).catch((error) => {
+      console.error("Error fetching devices: ", error);
+  });
 }
