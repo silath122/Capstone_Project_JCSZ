@@ -52,7 +52,7 @@
         .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+            margin-right: 20px;
         }
     
         .container > div {
@@ -97,9 +97,14 @@
             color: #666;
             margin-top: 5px;
         }
+
+        .heading {
+            margin-left: 20px;
+        }
+
         .search-container {
             margin-bottom: 20px;
-            text-align: center;
+            margin-left: 10px;
         }
 
         .search-box {
@@ -109,10 +114,6 @@
             border-radius: 4px;
             font-size: 16px;
             box-sizing: border-box;
-        }
-
-        body {
-            display: flex;
         }
     </style>
 </head>
@@ -130,10 +131,21 @@
             </li>
         </ul>
     </header>
-    <div class="search-container">
-        <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
+    <div class="heading">
+        <h1>Select an Edge Device</h1>
+        <h3>Filters</h3>
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
+        </div>
+        <div style="padding: 10px;">
+            <h4>Providers</h4>
+            <div id="filter">
+                <label><input type="checkbox" class="filter-checkbox">AAEON TECHNOLOGY INC.</label><br>
+                <label><input type="checkbox" class="filter-checkbox">AEWIN Technologies Co., Ltd.</label><br>
+                <div id="edge-devices-container" class="container"></div>
+            </div>
+        </div>
     </div>
-    <div id="edge-devices-container" class="container"></div>
     <script src="firebase.js"></script>
 </body>
 </html>
