@@ -16,22 +16,22 @@
             margin-right: 10px;
             display: inline-block; /* Make logo and text inline */
         }
-
+    
         .navbar-brand .text {
             display: inline-block; /* Make text inline */
         }
-
+    
         /* Custom CSS for home button */
         .navbar-home-button {
             margin-left: auto; /* Push to the right */
             margin-right: 20px; /* Add margin to the left to adjust position */
         }
-
+    
         /* Custom CSS to set text color of the button */
         .navbar-home-button .btn-primary {
             color: #fff !important; /* Set text color to white */
         }
-        
+    
         /* Custom CSS to make the button like the submit button */
         .btn-primary {
             background-color: #28609e;
@@ -39,37 +39,59 @@
             padding: 10px 20px; /* Adjust padding to match the size */
             font-size: 16px; /* Adjust font size to match the size */
         }
-
+    
         .btn-primary:hover {
             background-color: #204d74 !important; /* Override hover color */
             border-color: #204d74 !important; /* Override hover color */
         }
-
+    
         .btn-primary:focus {
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
-
+    
         .container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
-
+    
         .container > div {
             margin: 10px;
             text-align: center;
         }
-
+    
         .container img {
             width: 200px;
             height: auto;
         }
-        /* Custom CSS for UNO-137 V2 Small-Size Integrated DIN-Rail IPC with Intel Atom x6413E and x6425RE button
-        .edge-device-uno137-v2-smallsize-integrated-dinrail-ipc-with-intel-atom-x6413e-and-x6425re .edge-devices {
-            width: 200px;
+    
+        /* Custom CSS for device grid */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Four columns */
+            grid-gap: 20px; /* Spacing between devices */
+        }
+    
+        .device-card {
+            border: 1px solid #ccc; /* Add border around each device */
+            padding: 10px; /* Add padding inside each device */
+            text-align: center; /* Center content */
+        }
+    
+        .device-card img {
+            max-width: 100%;
             height: auto;
-        } */
-
+        }
+    
+        .device-name {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    
+        .device-provider {
+            color: #666;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body onload="fetchEdgeDevices()">
