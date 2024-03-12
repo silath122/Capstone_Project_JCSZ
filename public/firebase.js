@@ -107,3 +107,19 @@ function fetchEdgeDevices() {
         console.error("Error fetching devices: ", error);
     });
 }
+function searchDevices() {
+    var input, filter, devices, deviceName, i;
+    input = document.querySelector('.search-box');
+    filter = input.value.toUpperCase();
+    devices = document.querySelectorAll('.device-card');
+
+    // Loop through all device cards and hide those that don't match the search input
+    for (i = 0; i < devices.length; i++) {
+        deviceName = devices[i].querySelector('.device-name');
+        if (deviceName.textContent.toUpperCase().indexOf(filter) > -1) {
+            devices[i].style.display = "";
+        } else {
+            devices[i].style.display = "none";
+        }
+    }
+}

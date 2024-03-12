@@ -97,6 +97,19 @@
             color: #666;
             margin-top: 5px;
         }
+        .search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body onload="fetchEdgeDevices()">
@@ -113,6 +126,9 @@
             </li>
         </ul>
     </header>
+    <div class="search-container">
+        <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
+    </div>
     <div id="edge-devices-container" class="container"></div>
     <script src="firebase.js"></script>
 </body>
