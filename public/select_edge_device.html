@@ -52,7 +52,8 @@
         .container {
             display: flex;
             flex-wrap: wrap;
-            margin-right: 20px;
+            width: 1000px;
+            margin-right: 0px;
         }
     
         .container > div {
@@ -77,7 +78,7 @@
             padding: 10px; /* Add padding inside each device */
             text-align: center; /* Center content */
             width: 200px; /* Set fixed width */
-            height: 250px; /* Set fixed height */
+            height: 275px; /* Set fixed height */
             display: flex; /* Use flexbox to center content vertically */
             flex-direction: column; /* Stack elements vertically */
             justify-content: center; /* Center content vertically */
@@ -98,13 +99,9 @@
             margin-top: 5px;
         }
 
-        .heading {
-            margin-left: 20px;
-        }
-
         .search-container {
             margin-bottom: 20px;
-            margin-left: 10px;
+            margin-left: 0px;
         }
 
         .search-box {
@@ -114,6 +111,28 @@
             border-radius: 4px;
             font-size: 16px;
             box-sizing: border-box;
+        }
+
+        #content-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content-heading {
+            margin-left: 20px;
+        }
+
+        #main-content {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        #provider-filter {
+            margin-left: 20px;
+        }
+
+        #edge-devices {
+            flex-grow: 1;
         }
     </style>
 </head>
@@ -131,17 +150,25 @@
             </li>
         </ul>
     </header>
-    <div class="heading">
-        <h1>Select an Edge Device</h1>
-        <h3>Filters</h3>
-        <div class="search-container">
-            <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
+    <div id="content-container">
+        <div id="content-heading">
+            <h1>Select an Edge Device</h1>
+            <h3>Filters</h3>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
+            </div>
         </div>
-        <div style="padding: 10px;">
-            <h4>Providers</h4>
-            <div id="filter">
+        <div id="main-content">
+            <div id="provider-filter">
+                <h4>Providers</h4>
+                <!-- UI Example. Delete later. -->
                 <label><input type="checkbox" class="filter-checkbox">AAEON TECHNOLOGY INC.</label><br>
                 <label><input type="checkbox" class="filter-checkbox">AEWIN Technologies Co., Ltd.</label><br>
+                <label><input type="checkbox" class="filter-checkbox">ASRock Industrial Computer Corp.</label><br>
+                <label><input type="checkbox" class="filter-checkbox">ASUS Tek Computer Inc.</label><br>
+                <label><input type="checkbox" class="filter-checkbox">Advantech Co., Ltd</label><br>
+            </div>
+            <div id="edge-devices">
                 <div id="edge-devices-container" class="container"></div>
             </div>
         </div>
