@@ -127,12 +127,13 @@
             flex-grow: 1;
         }
 
-        #provider-filter {
+        #filters {
             margin-left: 20px;
         }
 
         #edge-devices {
             flex-grow: 1;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -153,13 +154,13 @@
     <div id="content-container">
         <div id="content-heading">
             <h1>Select an Edge Device</h1>
-            <h3>Filters</h3>
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
-            </div>
         </div>
         <div id="main-content">
-            <div id="provider-filter">
+            <div id="filters">
+                <h3>Filters</h3>
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
+                </div>
                 <h4>Providers</h4>
                 <!-- UI Example. Delete later. -->
                 <label><input type="checkbox" class="filter-checkbox">AAEON TECHNOLOGY INC.</label><br>
