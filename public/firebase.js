@@ -123,3 +123,64 @@ function searchDevices() {
         }
     }
 }
+function fetchProviders() {
+    var providerFilterContainer = document.getElementById("provider-filters");
+    if (!providerFilterContainer) return;
+
+    // Clear existing filters
+    providerFilterContainer.innerHTML = '';
+
+    // Fetch providers from Firestore
+    db.collection("provider-image-links").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            var providerName = doc.id;
+            // Create checkbox for each provider
+            var checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.className = "filter-checkbox";
+            checkbox.value = providerName;
+            checkbox.id = providerName;
+            checkbox.addEventListener("change", applyFilters);
+
+            var label = document.createElement("label");
+            label.htmlFor = providerName;
+            label.appendChild(document.createTextNode(providerName));
+
+            providerFilterContainer.appendChild(checkbox);
+            providerFilterContainer.appendChild(label);
+            providerFilterContainer.appendChild(document.createElement("br"));
+        });
+    }).catch((error) => {
+        console.error("Error fetching providers: ", error);
+    });
+}
+
+// Call fetchProviders after the document is loaded
+document.addEventListener('DOMContentLoaded', function () {
+    fetchEdgeDevices();
+    fetchProviders();
+});
+
+// Function to apply filters based on checkboxes
+function applyFilters() {
+    var selectedProviders = document.querySelectorAll('.filter-checkbox:checked');
+    var selectedProviderNames = Array.from(selectedProviders).map(provider => provider.value);
+
+    var devices = document.querySelectorAll('.device-card');
+    if (selectedProviderNames.length === 0) {
+        // Show all devices if no filters are selected
+        devices.forEach(device => {
+            device.style.display = "";
+        });
+        return;
+    }
+
+    devices.forEach(device => {
+        var deviceProvider = device.querySelector('.device-provider').textContent.replace("Provider: ", "");
+        if (selectedProviderNames.includes(deviceProvider)) {
+            device.style.display = ""; // Show device if its provider is selected
+        } else {
+            device.style.display = "none"; // Hide device otherwise
+        }
+    });
+}
