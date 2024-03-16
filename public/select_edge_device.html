@@ -23,6 +23,7 @@
     
         /* Custom CSS for home button */
         .navbar-home-button {
+            width: 70px;
             margin-left: auto; /* Push to the right */
             margin-right: 20px; /* Add margin to the left to adjust position */
         }
@@ -53,11 +54,11 @@
             display: flex;
             flex-wrap: wrap;
             width: 1000px;
-            margin-right: 0px;
+            margin-left: 20px;
         }
     
         .container > div {
-            margin: 10px;
+            margin: 20px;
             text-align: center;
         }
     
@@ -135,6 +136,16 @@
             flex-grow: 1;
             margin-top: 10px;
         }
+
+        header {
+            display: flex;
+        }
+
+        @media only screen and (max-width: 1350px) {
+            body {
+                width: 1350px;
+            }
+        }
     </style>
 </head>
 <body onload="fetchEdgeDevices()">
@@ -161,9 +172,8 @@
                 <div class="search-container">
                     <input type="text" class="search-box" placeholder="Search for devices..." onkeyup="searchDevices()">
                 </div>
-                <div id="provider-filters">
-                    <h4>Providers</h4>
-                </div>
+                <h4>Providers</h4>
+                <div id="provider-filters"></div>
             </div>
             <div id="edge-devices">
                 <div id="edge-devices-container" class="container"></div>
