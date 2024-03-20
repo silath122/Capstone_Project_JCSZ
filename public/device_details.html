@@ -3,43 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Details</title> /* Need to be able to get device name and display it when selected */
+
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
-    <!-- Your custom script comes after including Firebase -->
     <style>
         /* Custom CSS for logo */
         .navbar-brand .logo {
-            width: 30px; /* Adjust as needed */
+            width: 30px;
             height: auto;
             margin-right: 10px;
-            display: inline-block; /* Make logo and text inline */
+            display: inline-block;
         }
 
         .navbar-brand .text {
-            display: inline-block; /* Make text inline */
+            display: inline-block;
         }
 
-        /* Custom CSS for home button */
         .navbar-home-button {
-            margin-left: auto; /* Push to the right */
-            margin-right: 20px; /* Add margin to the left to adjust position */
+            width: 70px;
+            margin-left: auto;
+            margin-right: 20px;
         }
 
-        /* Custom CSS to set text color of the button */
         .navbar-home-button .btn-primary {
-            color: #fff !important; /* Set text color to white */
+            color: #fff !important;
+        }
+
+        .btn-primary {
+            background-color: #28609e;
+            border-color: #28609e;
+            padding: 10px 20px;
+            font-size: 16px;
         }
 
         .btn-primary:hover {
-            background-color: #204d74 !important; /* Override hover color */
-            border-color: #204d74 !important; /* Override hover color */
+            background-color: #204d74 !important;
+            border-color: #204d74 !important;
         }
 
         .btn-primary:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5); /* Adjust as needed */
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
+        }
+
+        header {
+            display: flex;
+        }
+
+        .device-details-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .device-details {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            max-width: 800px;
+        }
+
+        .device-details img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .device-details h2 {
+            margin-top: 0;
+        }
+
+        .device-details p {
+            margin: 10px 0;
+        }
+
+        .certifications {
+            margin-top: 20px;
+        }
+
+        .certifications ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .certifications ul li {
+            margin-bottom: 5px;
+        }
+
+        .certifications ul li:before {
+            content: "• ";
+            color: #28609e;
         }
     </style>
 </head>
@@ -48,16 +103,88 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="index.html">
                 <img src="chris_logo.png" alt="ChRIS Logo" class="logo">
-                <span class="text">Device Details</span> /* Need to be able to get device name and display it when selected */
+                <span class="text">Device Details</span>
             </a>
         </div>
         <ul class="nav navbar-nav navbar-right navbar-home-button">
             <li>
-                <a href="index.html" class="btn btn-primary btn-rounded">Back</a> <!-- Added btn-rounded class -->
+                <a href="index.html" class="btn btn-primary btn-rounded">Back</a>
             </li>
         </ul>
     </header>
+    <div class="device-details-container">
+        <div class="device-details" id="deviceDetails">
+            <!-- Device details will be dynamically inserted here -->
+        </div>
+    </div>
+
     <script src="firebase.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Get device name from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const deviceName = urlParams.get('device');
+
+    // Reference to Firestore collection
+    const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
+    const certificationsRef = devicesRef.collection('certifications');
+
+    // Get device details
+    devicesRef.get().then((doc) => {
+        if (doc.exists) {
+            const deviceData = doc.data();
+            const deviceDetailsDiv = document.getElementById('deviceDetails');
+
+            // Check if cached image exists
+            const cachedImage = localStorage.getItem(deviceName + '_image');
+            const imageUrl = cachedImage ? cachedImage : deviceData.image;
+
+            // Construct device details HTML
+            const deviceDetailsHTML = `
+                <img src="${imageUrl}" alt="${deviceData.name}">
+                <h2>${deviceData.name}</h2>
+                <p>Provider: ${deviceData.provider}</p>
+                <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                <div class="certifications">
+                    <h3>Certifications</h3>
+                    <ul id="certificationsList">
+                        <!-- Certifications will be dynamically inserted here -->
+                    </ul>
+                </div>
+            `;
+
+            // Insert device details HTML
+            deviceDetailsDiv.innerHTML = deviceDetailsHTML;
+
+            // Get certifications
+            certificationsRef.get().then((querySnapshot) => {
+                const certificationsList = document.getElementById('certificationsList');
+
+                querySnapshot.forEach((doc) => {
+                    const certificationData = doc.data();
+                    const certificationName = doc.id; // Certification document ID is the certification name
+                    const architecture = certificationData.architecture;
+                    const product = certificationData.product;
+
+                    // Create list item for each certification
+                    const certificationItem = document.createElement('li');
+                    certificationItem.innerHTML = `
+                        <strong>${certificationName}</strong><br>
+                        Architecture: ${architecture}<br>
+                        Product: ${product}
+                    `;
+                    certificationsList.appendChild(certificationItem);
+                });
+            }).catch((error) => {
+                console.error('Error getting certifications:', error);
+            });
+        } else {
+            console.error('Device not found');
+        }
+    }).catch((error) => {
+        console.error('Error getting device details:', error);
+    });
+});
+    </script>
 </body>
 </html>
-
