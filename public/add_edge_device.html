@@ -8,11 +8,14 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
-    <!-- Your custom script comes after including Firebase -->
+    
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <style>
         /* Custom CSS for logo */
         .navbar-brand .logo {
-            width: 30px; /* Adjust as needed */
+            width: 30px; 
             height: auto;
             margin-right: 10px;
             display: inline-block; /* Make logo and text inline */
@@ -48,12 +51,27 @@
         }
 
         .btn-primary:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5); /* Adjust as needed */
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5); 
         }
 
         header {
             display: flex;
         }
+
+        .dropdown-menu {
+            display: none; /* Hide dropdown menu initially */
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0 6px 12px rgba(0,0,0,.175);
+            padding: 10px;
+        }
+
+        .dropdown.open .dropdown-menu {
+            display: block; /* Show dropdown menu when clicked open */
+        }
+        
+        
     </style>
 </head>
 <body>
@@ -72,18 +90,35 @@
     </header>
     <div class="container">
         <h1>Add Edge Device</h1>
-        <!-- Add your form or content for adding a device here -->
         <form id="deviceForm">
-            <!-- Add your form fields here -->
             <div class="form-group">
                 <label for="deviceName">Device Name:</label>
                 <input type="text" class="form-control" id="deviceName" placeholder="Enter device name">
             </div>
             <div class="form-group">
                 <label for="deviceProvider">Device Provider:</label>
-                <input type="text" class="form-control" id="deviceProvider" placeholder="Enter device provider">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="providerDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Device Provider
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="providerDropdown" id="providerDropdownMenu">
+                        <!--Already dynamically added (code in firebase.js)-->
+                    </ul>
+                </div>
             </div>
-            <!-- Add more form fields as needed -->
+            <div class="form-group">
+                <label for="deviceProductSpecs">Product Specifications Link:</label>
+                <input type="text" class="form-control" id="deviceProductSpecs" placeholder="Enter the device's product specification link">
+            </div>
+            <div class="form-group" id="certifications">
+                <label for="certification">Certifications:</label>
+                <div class="certification">
+                    <input type="text" class="form-control" name="certificationProductName" placeholder="Enter Product Certification Name">
+                    <input type="text" class="form-control" name="certificationArchitecture" placeholder="Enter Architecture Certification Name">
+                </div>
+                <button type="button" class="btn btn-primary" id="addCertification">Add More</button>
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
