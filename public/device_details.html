@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Details</title>
 
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
     <style>
-        /* Custom CSS for logo */
+        
+
+        header {
+            display: flex;
+        }
+
         .navbar-brand .logo {
             width: 30px;
             height: auto;
@@ -26,7 +32,6 @@
             margin-left: auto;
             margin-right: 20px;
         }
-
         .navbar-home-button .btn-primary {
             color: #fff !important;
         }
@@ -39,62 +44,102 @@
         }
 
         .btn-primary:hover {
-            background-color: #204d74 !important;
-            border-color: #204d74 !important;
+            background-color: #204d74;
+            border-color: #204d74;
         }
 
         .btn-primary:focus {
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
 
-        header {
-            display: flex;
-        }
-
         .device-details-container {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             margin-top: 20px;
         }
 
         .device-details {
             border: 1px solid #ccc;
+            background-color: white;
             padding: 20px;
-            margin-top: 20px;
             max-width: 800px;
+            width: 90%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .device-details img {
             max-width: 100%;
             height: auto;
             margin-bottom: 20px;
+            border-radius: 5px;
         }
 
         .device-details h2 {
             margin-top: 0;
+            color: #28609e;
         }
 
         .device-details p {
             margin: 10px 0;
         }
 
-        .certifications {
-            margin-top: 20px;
+        .certifications h3 {
+            color: #28609e;
         }
 
         .certifications ul {
             list-style-type: none;
             padding: 0;
+            margin-top: 10px;
         }
 
         .certifications ul li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
         }
 
-        .certifications ul li:before {
-            content: "• ";
+        .certifications ul li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .certifications ul li strong {
             color: #28609e;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
     </style>
 </head>
@@ -146,10 +191,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>Provider: ${deviceData.provider}</p>
                 <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
                 <div class="certifications">
-                    <h3>Certifications</h3>
-                    <ul id="certificationsList">
-                        <!-- Certifications will be dynamically inserted here -->
-                    </ul>
+                    <div class="dropdown">
+                        <h3>Certifications</h3>
+                        <div class="dropdown-content" id="certificationsDropdown">
+                            <!-- Certifications will be dynamically inserted here -->
+                        </div>
+                    </div>
                 </div>
             `;
 
@@ -158,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Get certifications
             certificationsRef.get().then((querySnapshot) => {
-                const certificationsList = document.getElementById('certificationsList');
+                const certificationsDropdown = document.getElementById('certificationsDropdown');
 
                 querySnapshot.forEach((doc) => {
                     const certificationData = doc.data();
@@ -166,14 +213,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     const architecture = certificationData.architecture;
                     const product = certificationData.product;
 
-                    // Create list item for each certification
-                    const certificationItem = document.createElement('li');
+                    // Create dropdown item for each certification
+                    const certificationItem = document.createElement('a');
                     certificationItem.innerHTML = `
-                        <strong>${certificationName}</strong><br>
+                        <strong>${certificationName
+                        }</strong><br>
                         Architecture: ${architecture}<br>
                         Product: ${product}
                     `;
-                    certificationsList.appendChild(certificationItem);
+                    certificationsDropdown.appendChild(certificationItem);
                 });
             }).catch((error) => {
                 console.error('Error getting certifications:', error);
@@ -188,3 +236,4 @@ document.addEventListener('DOMContentLoaded', function () {
     </script>
 </body>
 </html>
+
