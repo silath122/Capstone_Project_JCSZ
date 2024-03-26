@@ -21,15 +21,15 @@
             display: inline-block; /* Make text inline */
         }
     
-        /* Custom CSS for home button */
-        .navbar-home-button {
+        /* Custom CSS for back button */
+        .navbar-back-button {
             width: 70px;
             margin-left: auto; /* Push to the right */
             margin-right: 20px; /* Add margin to the left to adjust position */
         }
     
         /* Custom CSS to set text color of the button */
-        .navbar-home-button .btn-primary {
+        .navbar-back-button .btn-primary {
             color: #fff !important; /* Set text color to white */
         }
     
@@ -48,6 +48,10 @@
     
         .btn-primary:focus {
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
+        }
+
+        header {
+            display: flex;
         }
     
         .container {
@@ -137,13 +141,138 @@
             margin-top: 10px;
         }
 
-        header {
-            display: flex;
+        @media only screen and (max-width: 400px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.24);
+            }
         }
 
-        @media only screen and (max-width: 1350px) {
-            body {
-                width: 1350px;
+        @media only screen and (min-width: 401px) and (max-width: 475px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.29);
+            }
+        }
+
+        @media only screen and (min-width: 476px) and (max-width: 550px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.35);
+            }
+        }
+
+        @media only screen and (min-width: 551px) and (max-width: 625px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.4);
+            }
+        }
+
+        @media only screen and (min-width: 626px) and (max-width: 700px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.46);
+            }
+        }
+
+        @media only screen and (min-width: 701px) and (max-width: 775px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.51);
+            }
+        }
+
+        @media only screen and (min-width: 776px) and (max-width: 850px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.57);
+            }
+        }
+
+        @media only screen and (min-width: 851px) and (max-width: 925px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.62);
+            }
+        }
+
+        @media only screen and (min-width: 926px) and (max-width: 1000px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.68);
+            }
+        }
+
+        @media only screen and (min-width: 1001px) and (max-width: 1075px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.73);
+            }
+        }
+
+        @media only screen and (min-width: 1076px) and (max-width: 1150px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.79);
+            }
+        }
+
+        @media only screen and (min-width: 1151px) and (max-width: 1225px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.84);
+            }
+        }
+
+        @media only screen and (min-width: 1226px) and (max-width: 1300px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.9);
+            }
+        }
+
+        @media only screen and (min-width: 1301px) and (max-width: 1350px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.95);
+            }
+        }
+
+        @media only screen and (min-width: 1351px) {
+            #content-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(1);
             }
         }
     </style>
@@ -156,7 +285,7 @@
                 <span class="text">Edge Device Provisioning</span>
             </a>
         </div>
-        <ul class="nav navbar-nav navbar-right navbar-home-button">
+        <ul class="nav navbar-nav navbar-right navbar-back-button">
             <li>
                 <a href="index.html" class="btn btn-primary btn-rounded">Back</a> <!-- Added btn-rounded class -->
             </li>
