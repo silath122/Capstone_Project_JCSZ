@@ -114,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var certificationsDiv = document.getElementById('certifications');
         var newCertificationDiv = document.createElement('div');
 
+        document.getElementById('addCertification').style.marginTop = '10px';
+
         newCertificationDiv.classList.add('certification');
         newCertificationDiv.innerHTML = `
             <input type="text" class="form-control" name="certificationProductName" placeholder="Enter Product Certification Name">
@@ -124,8 +126,16 @@ document.addEventListener('DOMContentLoaded', function () {
         newCertificationDiv.style.marginTop = '10px';
         newCertificationDiv.style.marginBottom = '10px';
 
+
         certificationsDiv.insertBefore(newCertificationDiv, document.getElementById('addCertification'));
     });
+            // Event listener for input changes
+        document.getElementById('deviceProvider').addEventListener('input', function (event) {
+            var selectedProvider = event.target.value.trim();
+            console.log("Selected provider:", selectedProvider); // Log selected provider
+            document.getElementById("providerDropdown").innerText = selectedProvider; // Update button text
+        });
+
 
     // Search devices event listener
     document.querySelector('.search-box').addEventListener('input', function () {
