@@ -77,7 +77,6 @@
 
         .detail-body {
             width: 100%; /* Set the body width to match the header */
-            margin-top: 20px; /* Add margin as needed */
         }
 
         .detail-header img {
@@ -87,12 +86,22 @@
             border-radius: 5px;
         }
 
+        .edit-device-btn {
+            background-color: #28609e;
+            border-color: #28609e;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
         .provision-device-btn {
             background-color: #28609e;
             border-color: #28609e;
             color: #fff;
             padding: 10px 20px;
             font-size: 16px;
+            width: 175px;
+            height: 50px;
         }
         .device-details h2 {
             margin-top: 0;
@@ -159,6 +168,14 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
+
+        .detail-body-container {
+            display: flex;
+        }
+
+        .detail-body {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -206,20 +223,23 @@ document.addEventListener('DOMContentLoaded', function () {
             const deviceDetailsHTML = `
             <div class="detail-header">
               <img src="${imageUrl}" alt="${deviceData.name}">
-              <button id="provisionDeviceBtn" class="btn btn-primary provision-device-btn">Provision Device</button>
+              <button id="editDeviceBtn" class="btn btn-primary edit-device-btn">Edit Device</button>
             </div>
-            <div class="detail-body">
-                <h2>${deviceData.name}</h2>
-                <p>Provider: ${deviceData.provider}</p>
-                <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
-                <div class="certifications">
-                    <div class="dropdown">
-                        <h3>Certifications</h3>
-                        <div class="dropdown-content" id="certificationsDropdown">
-                            <!-- Certifications will be dynamically inserted here -->
+            <div class="detail-body-container">
+                <div class="detail-body">
+                    <h2>${deviceData.name}</h2>
+                    <p>Provider: ${deviceData.provider}</p>
+                    <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                    <div class="certifications">
+                        <div class="dropdown">
+                            <h3>Certifications</h3>
+                            <div class="dropdown-content" id="certificationsDropdown">
+                                <!-- Certifications will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
                 </div>
+                <button id="provisionDeviceBtn" class="btn btn-primary provision-device-btn">Provision Device</button>
             </div>
             `;
 
