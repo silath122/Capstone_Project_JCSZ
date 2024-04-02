@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edge Device Provisioning Home</title>
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         /* Custom CSS for centering and enlarging buttons */
         .feature-btn-container {
@@ -19,7 +20,7 @@
             margin-bottom: 20px;
         }
 
-        /* Custom CSS for logo image  */
+        /* Custom CSS for logo image */
         .navbar-brand .logo {
             width: 30px; 
             height: auto;
@@ -36,6 +37,44 @@
                 font-size: 4vw;
             }
         }
+
+        /* Dark Mode Styles */
+        .dark-mode {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .dark-mode .navbar {
+            background-color: #343a40;
+            border-color: #343a40;
+        }
+
+        .dark-mode .jumbotron {
+            background-color: #495057;
+            color: #ffffff;
+        }
+
+        .dark-mode .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        /* Adjusted Toggle Icon Style for vertical centering */
+        .toggle-icon {
+            position: absolute; /* Positioned relative to its nearest positioned ancestor */
+            top: 50%; /* Center vertically */
+            right: 20px; /* Keep it towards the right */
+            transform: translateY(-50%); /* Adjust vertically to truly center */
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        /* Navbar adjustments for absolute positioning context */
+        .navbar {
+            position: relative; /* Provides a positioning context for absolute-positioned children */
+        }
+
     </style>
 </head>
 <body>
@@ -43,22 +82,31 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="index.html">
                 <img src="chris_logo.png" alt="ChRIS Logo" class="logo">
-                <span class="text">Edge Device Provisioning</span> <!-- Added span for text -->
+                <span class="text">Edge Device Provisioning</span>
             </a>
         </div>
+        <!-- Dark Mode Toggle Icon using Font Awesome -->
+        <i class="toggle-icon fas fa-lightbulb" onclick="toggleDarkMode()"></i>
     </header>
     <div class="container">
         <div class="jumbotron">
             <h1>Edge Device Provisioning for ChRIS</h1>
-            <p>This project aims to make edge device provisioning and medical analytics simpler and more accessible for hospitals in regions with limited resources, supporting the global mission to enhance healthcare services.
-                The open source solution enables a user to go to in order to easily provision an edge device as well as ChRIS software for the edge device.</p>
+            <p>This project aims to make edge device provisioning and medical analytics simpler and more accessible for hospitals in regions with limited resources, supporting the global mission to enhance healthcare services. The open source solution enables a user to go to in order to easily provision an edge device as well as ChRIS software for the edge device.</p>
         </div>
 
-        <!-- Feature Button Container -->
         <div class="feature-btn-container">
             <a class="btn btn-primary btn-lg" href="select_edge_device.html" role="button">Select Edge Device</a>
             <a class="btn btn-primary btn-lg" href="add_edge_device.html" role="button">Add Edge Device</a>
         </div>
     </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.querySelectorAll('.navbar, .jumbotron, .btn-primary').forEach(element => {
+                element.classList.toggle('dark-mode');
+            });
+        }
+    </script>
 </body>
 </html>
