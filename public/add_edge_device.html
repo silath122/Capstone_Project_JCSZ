@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Edge Device</title>
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
@@ -24,35 +25,41 @@
         .navbar-brand .text {
             display: inline-block; /* Make text inline */
         }
-
-        /* Custom CSS for home button */
-        .navbar-home-button {
-            width: 70px;
-            margin-left: auto; /* Push to the right */
-            margin-right: 20px; /* Add margin to the left to adjust position */
-        }
-
-        /* Custom CSS to set text color of the button */
-        .navbar-home-button .btn-primary {
+        /* General button style */
+        .navbar-button-style {
             color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
         }
+
+        /* Specific adjustments for positioning if needed */
+        .navbar-back-button, .add-more-btn, .submit-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .navbar-back-button {
+            right: 60px; /* Adjust this based on your layout */
+        }
+
         
-        /* Custom CSS to make the button like the submit button */
-        .btn-primary {
-            background-color: #28609e; /* Adjust as needed */
-            border-color: #28609e; /* Adjust as needed */
-            padding: 10px 20px; /* Adjust padding to match the size */
-            font-size: 16px; /* Adjust font size to match the size */
-        }
 
-        .btn-primary:hover {
+        /* Hover and focus states can also be generalized */
+        .navbar-button-style:hover {
             background-color: #204d74 !important; /* Override hover color */
-            border-color: #204d74 !important; /* Override hover color */
+            border-color: #204d74 !important;
         }
 
-        .btn-primary:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5); 
+        .navbar-button-style:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
+
+        
 
         header {
             display: flex;
@@ -70,6 +77,45 @@
         .dropdown.open .dropdown-menu {
             display: block; /* Show dropdown menu when clicked open */
         }
+        /* Dark Mode Styles */
+        .dark-mode {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .dark-mode .navbar {
+            background-color: #313539;
+            border-color: #343a40;
+        }
+        .dark-mode .navbar-brand .text, .dark-mode .device-provider {
+            color: #ffffff; /* Makes text white in dark mode */
+        }
+
+        .dark-mode .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .dark-mode .toggle-icon {
+            color: #ffffff; /* White color for the icon in dark mode */
+        }
+
+        /* Toggle Icon Style */
+        .toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px; /* Adjust to match the homepage layout */
+            transform: translateY(-50%);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            color: #28609e;
+        }
+
+        /* Adjust the navbar to ensure proper positioning */
+        .navbar {
+            position: relative;
+        }
         
         
     </style>
@@ -82,11 +128,8 @@
                 <span class="text">Edge Device Provisioning</span>
             </a>
         </div>
-        <ul class="nav navbar-nav navbar-right navbar-home-button">
-            <li>
-                <a href="index.html" class="btn btn-primary btn-rounded">Back</a> <!-- Added btn-rounded class -->
-            </li>
-        </ul>
+        <a href="index.html" class="btn btn-primary navbar-button-style navbar-back-button">Back</a>
+        <i class="fas fa-lightbulb toggle-icon" onclick="toggleDarkMode()"></i>
     </header>
     <div class="container">
         <h1>Add Edge Device</h1>
@@ -111,9 +154,9 @@
                     <input type="text" class="form-control" name="certificationProductName" placeholder="Enter Product Certification Name">
                     <input type="text" class="form-control" name="certificationArchitecture" placeholder="Enter Architecture Certification Name">
                 </div>
-                <button type="button" class="btn btn-primary" id="addCertification">Add More</button>
+                <button type="button" class="btn btn-primary navbar-button-style" id="addCertification">Add More</button>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary navbar-button-style">Submit</button>
         </form>
     </div>
     <div class="pf-c-modal-box" role="dialog" aria-modal="true" id="provisionModal" hidden>
@@ -129,5 +172,25 @@
   </footer>
 </div>
     <script src="firebase.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (isDarkModeEnabled) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                    element.classList.add('dark-mode');
+                });
+            }
+        });
+    
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    
+            document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                element.classList.toggle('dark-mode');
+            });
+        }
+    </script>
 </body>
 </html>

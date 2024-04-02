@@ -6,6 +6,7 @@
     <title>Device Details</title>
 
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
@@ -25,30 +26,7 @@
             display: inline-block;
         }
 
-        .navbar-home-button {
-            width: 70px;
-            margin-left: auto;
-            margin-right: 20px;
-        }
-        .navbar-home-button .btn-primary {
-            color: #fff !important;
-        }
 
-        .btn-primary {
-            background-color: #28609e;
-            border-color: #28609e;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-
-        .btn-primary:hover {
-            background-color: #204d74;
-            border-color: #204d74;
-        }
-
-        .btn-primary:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
-        }
 
         .device-details-container {
             display: flex;
@@ -176,6 +154,90 @@
         .detail-body {
             flex: 1;
         }
+        /* Adjust back button styles */
+        .navbar-button-style {
+            color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
+        }
+
+        /* Specific adjustments for positioning if needed */
+        .navbar-back-button, .add-more-btn, .submit-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .navbar-back-button {
+            right: 60px; /* Adjust this based on your layout */
+        }
+
+        
+
+        /* Hover and focus states can also be generalized */
+        .navbar-button-style:hover {
+            background-color: #204d74 !important; /* Override hover color */
+            border-color: #204d74 !important;
+        }
+
+        .navbar-button-style:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
+        }
+        /* Dark Mode Styles */
+        .dark-mode {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .dark-mode .navbar {
+            background-color: #313539;
+            border-color: #343a40;
+        }
+        .dark-mode .navbar-brand .text, .dark-mode .device-provider {
+            color: #ffffff; /* Makes text white in dark mode */
+        }
+
+        .dark-mode .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .dark-mode .toggle-icon {
+            color: #ffffff; /* White color for the icon in dark mode */
+        }
+
+        /* Toggle Icon Style */
+        .toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px; /* Adjust to match the homepage layout */
+            transform: translateY(-50%);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            color: #28609e;
+        }
+
+        /* Adjust the navbar to ensure proper positioning */
+        .navbar {
+            position: relative;
+        }
+        .buttons-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            align-items: flex-start; /* Align buttons to the left */
+            gap: 10px; /* Add space between buttons */
+        }
+
+        /* Adjust the button styles if necessary */
+        .navbar-button-style {
+            width: 175px; /* Ensure consistent button width */
+            /* Other styles remain unchanged */
+        }
     </style>
 </head>
 <body>
@@ -186,11 +248,8 @@
                 <span class="text">Device Details</span>
             </a>
         </div>
-        <ul class="nav navbar-nav navbar-right navbar-home-button">
-            <li>
-                <a href="select_edge_device.html" class="btn btn-primary btn-rounded">Back</a>
-            </li>
-        </ul>
+        <a href="select_edge_device.html" class="btn btn-primary navbar-button-style navbar-back-button">Back</a>
+        <i class="fas fa-lightbulb toggle-icon" onclick="toggleDarkMode()"></i>
     </header>
     <div class="device-details-container">
         <div class="device-details" id="deviceDetails">
@@ -222,8 +281,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Construct device details HTML
             const deviceDetailsHTML = `
             <div class="detail-header">
-              <img src="${imageUrl}" alt="${deviceData.name}">
-              <button id="editDeviceBtn" class="btn btn-primary edit-device-btn">Edit Device</button>
+                <img src="${imageUrl}" alt="${deviceData.name}">
+                <div class="buttons-container">
+                <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+            </div>
             </div>
             <div class="detail-body-container">
                 <div class="detail-body">
@@ -239,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 </div>
-                <button id="provisionDeviceBtn" class="btn btn-primary provision-device-btn">Provision Device</button>
+                
             </div>
             `;
 
@@ -445,5 +507,23 @@ async function createPullRequest(repoOwner, repoName, branchName) {
         console.error('Error creating pull request:', error);
     }
 }
+    document.addEventListener('DOMContentLoaded', () => {
+            const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (isDarkModeEnabled) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                    element.classList.add('dark-mode');
+                });
+            }
+        });
+    
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    
+            document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                element.classList.toggle('dark-mode');
+            });
+        }
 
 </script>

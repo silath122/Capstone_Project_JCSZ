@@ -26,26 +26,10 @@
         
     
         /* Custom CSS to set text color of the button */
-        .navbar-back-button .btn-primary {
-            color: #fff !important; /* Set text color to white */
-        }
+        
     
         /* Custom CSS to make the button like the submit button */
-        .btn-primary {
-            background-color: #28609e;
-            border-color: #28609e;
-            padding: 10px 20px; /* Adjust padding to match the size */
-            font-size: 16px; /* Adjust font size to match the size */
-        }
-    
-        .btn-primary:hover {
-            background-color: #204d74 !important; /* Override hover color */
-            border-color: #204d74 !important; /* Override hover color */
-        }
-    
-        .btn-primary:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
-        }
+        
 
         header {
             display: flex;
@@ -272,6 +256,40 @@
                 transform: scale(1);
             }
         }
+        /* General button style */
+        .navbar-button-style {
+            color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
+        }
+
+        /* Specific adjustments for positioning if needed */
+        .navbar-back-button, .edit-device-btn, .provision-device-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .navbar-back-button {
+            right: 60px; /* Adjust this based on your layout */
+        }
+
+        
+
+        /* Hover and focus states can also be generalized */
+        .navbar-button-style:hover {
+            background-color: #204d74 !important; /* Override hover color */
+            border-color: #204d74 !important;
+        }
+
+        .navbar-button-style:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
+        }
+
         /* Dark Mode Styles */
         .dark-mode {
             background-color: #343a40;
@@ -323,7 +341,7 @@
                 <span class="text">Edge Device Provisioning</span>
             </a>
         </div>
-        
+        <a href="index.html" class="btn btn-primary navbar-button-style navbar-back-button">Back</a>
         <i class="fas fa-lightbulb toggle-icon" onclick="toggleDarkMode()"></i>
     </header>
     <div id="content-container">
@@ -346,13 +364,25 @@
     </div>
     <script src="firebase.js"></script>
     <script>
-        // JavaScript function for toggling dark mode
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (isDarkModeEnabled) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                    element.classList.add('dark-mode');
+                });
+            }
+        });
+    
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    
             document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
                 element.classList.toggle('dark-mode');
             });
         }
     </script>
+    
 </body>
 </html>

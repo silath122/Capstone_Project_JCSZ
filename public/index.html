@@ -31,6 +31,15 @@
         .navbar-brand .text {
             display: inline-block; /* text inline */
         }
+        .navbar-button-style {
+            color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
+        }
 
         @media only screen and (max-width: 500px) {
             .feature-btn-container .btn {
@@ -103,18 +112,31 @@
         </div>
 
         <div class="feature-btn-container">
-            <a class="btn btn-primary btn-lg" href="select_edge_device.html" role="button">Select Edge Device</a>
-            <a class="btn btn-primary btn-lg" href="add_edge_device.html" role="button">Add Edge Device</a>
+            <a class="btn btn-primary navbar-button-style" href="select_edge_device.html" role="button">Select Edge Device</a>
+            <a class="btn btn-primary navbar-button-style" href="add_edge_device.html" role="button">Add Edge Device</a>
         </div>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (isDarkModeEnabled) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                    element.classList.add('dark-mode');
+                });
+            }
+        });
+    
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            document.querySelectorAll('.navbar, .jumbotron, .btn-primary').forEach(element => {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    
+            document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
                 element.classList.toggle('dark-mode');
             });
         }
     </script>
+    
 </body>
 </html>
