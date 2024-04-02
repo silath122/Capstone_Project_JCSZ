@@ -273,8 +273,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // Add event listener to the "Provision Device" button
             const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
             provisionDeviceBtn.addEventListener('click', function () {
+                createDeviceBranch(deviceName);
                 // Redirect to provision_device.html
-                window.location.href = 'provision_device.html';
+                //window.location.href = 'provision_device.html';
             });
         } else {
             console.error('Device not found');
@@ -283,4 +284,166 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Error getting device details:', error);
     });
 });
+
+// Add your GitHub Personal Access Token here
+const githubToken = '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';
+
+const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+const prTitle = 'New Pull Request'; // Title of the pull request
+const prBody = 'This is a new pull request created using the GitHub API.'; // Body of the pull request
+const fileContent = 'This is a new file added via API.';
+
+async function createDeviceBranch(deviceName) {
+    const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+    const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+
+    // Fetch the latest commit SHA of the main branch
+    const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
+    const mainBranchResponse = await fetch(mainBranchUrl, {
+        headers: {
+            Authorization: `token ${githubToken}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    const mainBranchData = await mainBranchResponse.json();
+    const mainBranchSha = mainBranchData.commit.sha;
+
+    // Create a unique branch name based on device name and count
+    const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
+
+    // Create a new branch from the main branch
+    await createBranch(repoOwner, repoName, branchName, mainBranchSha);
+
+    // Create a new file in the devices folder
+    const fileName = `${branchName}.txt`; // Example: "DeviceName_BranchName.txt"
+    await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
+
+    // Create a pull request to merge the new branch with the main branch
+    await createPullRequest(repoOwner, repoName, branchName);
+}
+
+async function createUniqueBranchName(repoOwner, repoName, deviceName) {
+    const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
+
+    try {
+        const branchesResponse = await fetch(branchesUrl, {
+            headers: {
+                Authorization: `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!branchesResponse.ok) {
+            throw new Error('Error fetching branches data');
+        }
+
+        const branchesData = await branchesResponse.json();
+
+        const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
+        const branchCount = deviceBranches.length;
+
+        // Create a unique branch name based on device name and count
+        const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
+
+        return uniqueBranchName;
+    } catch (error) {
+        console.error('Error creating unique branch name:', error);
+        return null;
+    }
+}
+
+async function createBranch(repoOwner, repoName, branchName, baseSha) {
+    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
+    const requestData = {
+        ref: `refs/heads/${branchName}`,
+        sha: baseSha,
+    };
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                Authorization: `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        });
+        if (!response.ok) {
+            console.error('Error creating branch:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error creating branch:', error);
+    }
+}
+
+async function addFileToRepo(fileName, fileContent, branchName) {
+    const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+    const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+    const filePath = `devices/${fileName}`; // Specify the file path in the repository
+    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+
+    // Get the current file SHA if it exists
+    const getFileUrl = `${apiUrl}?ref=${branchName}`;
+    const getFileResponse = await fetch(getFileUrl, {
+        headers: {
+            Authorization: `token ${githubToken}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    const getFileData = await getFileResponse.json();
+    const fileSha = getFileData.sha;
+
+    const requestData = {
+        message: `Add ${fileName}`, // Commit message
+        content: btoa(fileContent), // Encode file content in base64
+        branch: branchName, // Specify the branch
+        sha: fileSha, // Provide the SHA if the file exists, or null if it's a new file
+    };
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'PUT', // Use PUT to update the file
+            headers: {
+                Authorization: `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        });
+        if (!response.ok) {
+            console.error('Error adding/updating file:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error adding/updating file:', error);
+    }
+}
+
+async function createPullRequest(repoOwner, repoName, branchName) {
+    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
+    const requestData = {
+        title: 'New Pull Request', // Title of the pull request
+        body: 'This is a new pull request created using the GitHub API.', // Body of the pull request
+        head: branchName, // Branch you're merging from
+        base: 'main', // Branch you're merging into
+    };
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                Authorization: `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        });
+        if (response.ok) {
+            alert("Device provisioned successfully.");
+        } else {
+            console.error('Error creating pull request:', responseData.message);
+        }
+    } catch (error) {
+        console.error('Error creating pull request:', error);
+    }
+}
+
 </script>
