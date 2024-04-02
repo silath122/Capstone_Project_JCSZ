@@ -49,6 +49,9 @@ async function updateLastUpdateTime() {
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('deviceForm').addEventListener('submit', async function (event) {
         event.preventDefault();
+
+        
+
         var deviceName = document.getElementById('deviceName').value.trim();
         var deviceProvider = document.getElementById('deviceProvider').value.trim();
         var deviceProductSpecs = document.getElementById('deviceProductSpecs').value.trim();
@@ -59,7 +62,16 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Please fill in both device type, device software, and the device product specification link.');
             return;
         }
-
+        else {
+            document.getElementById('provisionModal').hidden = false;
+        }
+        document.getElementById('provisionYes').addEventListener('click', function() {
+            window.location.href = 'provision_device.html';
+        });
+        
+        document.getElementById('provisionNo').addEventListener('click', function() {
+            document.getElementById('provisionModal').hidden = true;
+        });
         try {
             // Add the device document to edge-devices collection
             await db.collection('edge-devices').doc(deviceName).set({
@@ -77,7 +89,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     certifications.push({ product: certificationProductName, architecture: certificationArchitecture });
                 }
             });
-        
+            document.getElementById('provisionYes').addEventListener('click', async function() {
+                // Here, invoke the function that contains your submission logic
+                await submitForm(); // Assuming submitForm is your function that handles Firestore submission
+                document.getElementById('provisionModal').hidden = true;
+                window.location.href = 'provision_device.html'; // Or any other action post-submission
+            });
+            
+            document.getElementById('provisionNo').addEventListener('click', function() {
+                document.getElementById('provisionModal').hidden = true; // Hide the modal
+            });
+            
 
             // Add certifications to the sub-collection under the device document
             var certificationsCollection = db.collection('edge-devices').doc(deviceName).collection('certifications');
