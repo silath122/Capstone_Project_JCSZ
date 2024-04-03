@@ -84,6 +84,7 @@
         .device-details h2 {
             margin-top: 0;
             color: #28609e;
+            font-weight: bold;
         }
 
         .device-details p {
@@ -210,6 +211,10 @@
             color: #ffffff; /* White color for the icon in dark mode */
         }
 
+        .dark-mode .device-details {
+          background-color: #ababab;
+        }
+
         /* Toggle Icon Style */
         .toggle-icon {
             position: absolute;
@@ -273,40 +278,60 @@ document.addEventListener('DOMContentLoaded', function () {
         if (doc.exists) {
             const deviceData = doc.data();
             const deviceDetailsDiv = document.getElementById('deviceDetails');
+            
+            // Get provider name
+            const providerName = deviceData.provider;
 
-            // Check if cached image exists
-            const cachedImage = localStorage.getItem(deviceName + '_image');
-            const imageUrl = cachedImage ? cachedImage : deviceData.image;
+            // Reference to provider-image-links collection
+            const providerImageLinksRef = firebase.firestore().collection('provider-image-links').doc(providerName);
 
-            // Construct device details HTML
-            const deviceDetailsHTML = `
-            <div class="detail-header">
-                <img src="${imageUrl}" alt="${deviceData.name}">
-                <div class="buttons-container">
-                <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
-                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
-            </div>
-            </div>
-            <div class="detail-body-container">
-                <div class="detail-body">
-                    <h2>${deviceData.name}</h2>
-                    <p>Provider: ${deviceData.provider}</p>
-                    <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
-                    <div class="certifications">
-                        <div class="dropdown">
-                            <h3>Certifications</h3>
-                            <div class="dropdown-content" id="certificationsDropdown">
-                                <!-- Certifications will be dynamically inserted here -->
+            // Get image link for the provider
+            providerImageLinksRef.get().then((providerDoc) => {
+                if (providerDoc.exists) {
+                    const providerImageData = providerDoc.data();
+                    const imageUrl = providerImageData.imageLink;
+
+                    // Construct device details HTML
+                    const deviceDetailsHTML = `
+                    <div class="detail-header">
+                        <img src="${imageUrl}" alt="${deviceData.name}">
+                        <div class="buttons-container">
+                            <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                            <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                        </div>
+                    </div>
+                    <div class="detail-body-container">
+                        <div class="detail-body">
+                            <h2>${deviceData.name}</h2>
+                            <p>Provider: ${deviceData.provider}</p>
+                            <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                            <div class="certifications">
+                                <div class="dropdown">
+                                    <h3 style="cursor: pointer;">Certifications</h3>
+                                    <div class="dropdown-content" id="certificationsDropdown">
+                                        <!-- Certifications will be dynamically inserted here -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
-            </div>
-            `;
+                    `;
 
-            // Insert device details HTML
-            deviceDetailsDiv.innerHTML = deviceDetailsHTML;
+                    // Insert device details HTML
+                    deviceDetailsDiv.innerHTML = deviceDetailsHTML;
+                    // Add event listener to the "Provision Device" button
+            const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
+            provisionDeviceBtn.addEventListener('click', function () {
+                createDeviceBranch(deviceName);
+                // Redirect to provision_device.html
+                // window.location.href = 'provision_device.html';
+            });
+                } else {
+                    console.error('Provider image link not found');
+                }
+            }).catch((error) => {
+                console.error('Error getting provider image link:', error);
+            });
 
             // Get certifications
             certificationsRef.get().then((querySnapshot) => {
@@ -321,8 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Create dropdown item for each certification
                     const certificationItem = document.createElement('a');
                     certificationItem.innerHTML = `
-                        <strong>${certificationName
-                        }</strong><br>
+                        <strong>${certificationName}</strong><br>
                         Architecture: ${architecture}<br>
                         Product: ${product}
                     `;
@@ -330,14 +354,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }).catch((error) => {
                 console.error('Error getting certifications:', error);
-            });
-
-            // Add event listener to the "Provision Device" button
-            const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
-            provisionDeviceBtn.addEventListener('click', function () {
-                createDeviceBranch(deviceName);
-                // Redirect to provision_device.html
-                //window.location.href = 'provision_device.html';
             });
         } else {
             console.error('Device not found');
@@ -347,8 +363,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 // Add your GitHub Personal Access Token here
-const githubToken = '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';
+const githubToken = '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';
 
 const repoOwner = 'juliakempton'; // Replace with the owner of the repository
 const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository

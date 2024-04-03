@@ -20,7 +20,6 @@ var db = firebase.firestore();
 // Function to fetch data either from cache or Firestore
 async function fetchWithCache(collectionName) {
     var dataFromCache = localStorage.getItem(collectionName);
-    console.log(dataFromCache);
     if (dataFromCache) {
         return JSON.parse(dataFromCache);
     } else {
@@ -229,15 +228,12 @@ async function fetchEdgeDevices() {
   var devices = [];
   var cacheLastUpdate = localStorage.getItem("lastUpdateTime"); // see when was the last time data was added
   var metadataRef = db.collection("metadata").doc("lastUpdate");
-
   try {
       var metadataSnapshot = await metadataRef.get();
       var metadata = metadataSnapshot.data();
-
       if (metadata && metadata.lastUpdate && cacheLastUpdate) {
           var databaseLastUpdate = metadata.lastUpdate.toMillis();
-          console.log(databaseLastUpdate);
-          console.log(parseInt(cacheLastUpdate, 10));
+
           if (databaseLastUpdate < parseInt(cacheLastUpdate, 10)) {
               devices = JSON.parse(localStorage.getItem("edge-devices") || "[]");
           } else {
@@ -266,14 +262,17 @@ async function fetchEdgeDevices() {
 
       var deviceDiv = document.createElement("div");
       deviceDiv.classList.add("device-card");
+      deviceDiv.onclick = () => {
+        window.location.href = "device_details.html?device=" + deviceName;
+      };
 
-      var deviceLink = document.createElement("a");
       var deviceImg = document.createElement("img");
       var deviceNameVar = document.createElement("p");
       deviceNameVar.classList.add("device-name");
       var deviceProviderVar = document.createElement("p");
       deviceProviderVar.classList.add("device-provider");
 
+      var deviceLink = document.createElement("a");
       deviceLink.href = "device_details.html?device=" + deviceName;
 
       // Set image URL from cache or default
@@ -317,13 +316,11 @@ async function fetchProviders() {
   providerFilterContainer.innerHTML = ''; // Clear existing filters
 
   var providers = await fetchWithCache("provider-image-links");
-  console.log(providers);
   if (providers.length === 0) {
       // If cache is empty or outdated, fetch from Firestore
       db.collection("provider-image-links").get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
               var providerName = doc.id;
-              console.log("Provider Name:", providerName); // Log providerName
               var checkbox = document.createElement("input");
               checkbox.type = "checkbox";
               checkbox.className = "filter-checkbox";
@@ -346,7 +343,6 @@ async function fetchProviders() {
       // Use data from cache
       providers.forEach(provider => {
         var providerName = provider.provider;
-          console.log("Provider Name:", providerName); // Log providerName
           var checkbox = document.createElement("input");
           checkbox.type = "checkbox";
           checkbox.className = "filter-checkbox";
