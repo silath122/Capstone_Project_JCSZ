@@ -55,8 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var deviceProvider = document.getElementById('deviceProvider').value.trim();
         var deviceProductSpecs = document.getElementById('deviceProductSpecs').value.trim();
 
-
-
         if (deviceName === '' || deviceProvider === '' || deviceProductSpecs == '') {
             alert('Please fill in both device type, device software, and the device product specification link.');
             return;
@@ -64,13 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else {
             document.getElementById('provisionModal').hidden = false;
         }
-        document.getElementById('provisionYes').addEventListener('click', function() {
-            window.location.href = 'provision_device.html';
-        });
-        
-        document.getElementById('provisionNo').addEventListener('click', function() {
-            document.getElementById('provisionModal').hidden = true;
-        });
+
         try {
             // Add the device document to edge-devices collection
             await db.collection('edge-devices').doc(deviceName).set({
@@ -88,17 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     certifications.push({ product: certificationProductName, architecture: certificationArchitecture });
                 }
             });
-            document.getElementById('provisionYes').addEventListener('click', async function() {
-                // Here, invoke the function that contains your submission logic
-                await submitForm(); // Assuming submitForm is your function that handles Firestore submission
-                document.getElementById('provisionModal').hidden = true;
-                window.location.href = 'provision_device.html'; // Or any other action post-submission
-            });
-            
-            document.getElementById('provisionNo').addEventListener('click', function() {
-                document.getElementById('provisionModal').hidden = true; // Hide the modal
-            });
-            
 
             // Add certifications to the sub-collection under the device document
             var certificationsCollection = db.collection('edge-devices').doc(deviceName).collection('certifications');
@@ -117,9 +98,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 certificationInputs[i].remove();
             }
 
+            showModal(); // Call this function to show the modal and backdrop
 
-            // Display success message
-            alert('Edge device has been successfully added to Firestore!');
+            function showModal() {
+              const modal = document.getElementById('provisionModal');
+              const backdrop = document.getElementById('modalBackdrop');
+              modal.hidden = false;
+              backdrop.hidden = false;
+            }
+          
+            function hideModal() {
+                const modal = document.getElementById('provisionModal');
+                const backdrop = document.getElementById('modalBackdrop');
+                modal.hidden = true;
+                backdrop.hidden = true;
+            }
+
+
+            document.getElementById('provisionModal').hidden = false; // Show the modal after successful addition
+
+            // Event listener for 'Yes' button to provision the device
+            document.getElementById('provisionYes').addEventListener('click', async () => {
+                await createDeviceBranch(deviceName); // Provisioning or related actions
+                hideModal();
+            });
+
+            // Event listener for 'No' button to close the modal
+            document.getElementById('provisionNo').addEventListener('click', function() {
+                hideModal();
+
+            });
+
             console.log('Device and certifications successfully added to Firestore!');
             updateLastUpdateTime();
         } catch (error) {
@@ -127,7 +136,160 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Error: Edge device could not be added.');
             console.error('Error adding document: ', error);
         }
-            
+          // Add your GitHub Personal Access Token here
+        const githubToken = 'token';
+
+        async function createDeviceBranch(deviceName) {
+            const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+            const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+
+            // Fetch the latest commit SHA of the main branch
+            const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
+            const mainBranchResponse = await fetch(mainBranchUrl, {
+                headers: {
+                    Authorization: `token ${githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const mainBranchData = await mainBranchResponse.json();
+            const mainBranchSha = mainBranchData.commit.sha;
+
+            // Create a unique branch name based on device name and count
+            const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
+
+            // Create a new branch from the main branch
+            await createBranch(repoOwner, repoName, branchName, mainBranchSha);
+
+            // Create a new file in the devices folder
+            const fileName = `${branchName}.txt`; // Example: "DeviceName_BranchName.txt"
+            await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
+
+            // Create a pull request to merge the new branch with the main branch
+            await createPullRequest(repoOwner, repoName, branchName);
+        }
+
+        async function createUniqueBranchName(repoOwner, repoName, deviceName) {
+            const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
+
+            try {
+                const branchesResponse = await fetch(branchesUrl, {
+                    headers: {
+                        Authorization: `token ${githubToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!branchesResponse.ok) {
+                    throw new Error('Error fetching branches data');
+                }
+
+                const branchesData = await branchesResponse.json();
+
+                const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
+                const branchCount = deviceBranches.length;
+
+                // Create a unique branch name based on device name and count
+                const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
+
+                return uniqueBranchName;
+            } catch (error) {
+                console.error('Error creating unique branch name:', error);
+                return null;
+            }
+        }
+
+        async function createBranch(repoOwner, repoName, branchName, baseSha) {
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
+            const requestData = {
+                ref: `refs/heads/${branchName}`,
+                sha: baseSha,
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `token ${githubToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                });
+                if (!response.ok) {
+                    console.error('Error creating branch:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error creating branch:', error);
+            }
+        }
+
+        async function addFileToRepo(fileName, fileContent, branchName) {
+            const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+            const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+            const filePath = `devices/${fileName}`; // Specify the file path in the repository
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+
+            // Get the current file SHA if it exists
+            const getFileUrl = `${apiUrl}?ref=${branchName}`;
+            const getFileResponse = await fetch(getFileUrl, {
+                headers: {
+                    Authorization: `token ${githubToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const getFileData = await getFileResponse.json();
+            const fileSha = getFileData.sha;
+
+            const requestData = {
+                message: `Add ${fileName}`, // Commit message
+                content: btoa(fileContent), // Encode file content in base64
+                branch: branchName, // Specify the branch
+                sha: fileSha, // Provide the SHA if the file exists, or null if it's a new file
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'PUT', // Use PUT to update the file
+                    headers: {
+                        Authorization: `token ${githubToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                });
+                if (!response.ok) {
+                    console.error('Error adding/updating file:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error adding/updating file:', error);
+            }
+        }
+
+        async function createPullRequest(repoOwner, repoName, branchName) {
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
+            const requestData = {
+                title: 'New Pull Request', // Title of the pull request
+                body: 'This is a new pull request created using the GitHub API.', // Body of the pull request
+                head: branchName, // Branch you're merging from
+                base: 'main', // Branch you're merging into
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `token ${githubToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                });
+                if (response.ok) {
+                    alert("Device provisioned successfully.");
+                } else {
+                    console.error('Error creating pull request:', responseData.message);
+                }
+            } catch (error) {
+                console.error('Error creating pull request:', error);
+            }
+        }
     });
 
     // An 'add more' button event listener for form submission certifications

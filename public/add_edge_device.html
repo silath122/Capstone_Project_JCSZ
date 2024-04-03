@@ -47,8 +47,6 @@
             right: 60px; /* Adjust this based on your layout */
         }
 
-        
-
         /* Hover and focus states can also be generalized */
         .navbar-button-style:hover {
             background-color: #204d74 !important; /* Override hover color */
@@ -59,7 +57,17 @@
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
 
-        
+        .form-control {
+          margin-bottom: 10px;
+        }
+
+        .form-group label {
+          font-size: 15px;
+        }
+
+        .container {
+          width: 50%;
+        }
 
         header {
             display: flex;
@@ -116,7 +124,32 @@
         .navbar {
             position: relative;
         }
-        
+        .pf-c-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 1040; /* Backdrop should have higher index than normal content but less than modal itself */
+        }
+
+        .pf-c-modal-box {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1050; /* Modal should be on top of the backdrop */
+          border: 5px solid white;
+          padding: 20px;
+          background: white;
+          color: black;
+          border-radius: 10px;        }
+
+        .pf-c-modal-box__footer {
+          padding-top: 10px;
+        }
+
         
     </style>
 </head>
@@ -159,18 +192,20 @@
             <button type="submit" class="btn btn-primary navbar-button-style">Submit</button>
         </form>
     </div>
-    <div class="pf-c-modal-box" role="dialog" aria-modal="true" id="provisionModal" hidden>
-  <header class="pf-c-modal-box__header">
-    <h1 class="pf-c-modal-box__title">Provision Device</h1>
-  </header>
-  <div class="pf-c-modal-box__body">
-    Do you want to provision the device?
+    <div class="pf-c-backdrop" hidden id="modalBackdrop">
+      <div class="pf-c-modal-box" role="dialog" aria-modal="true" id="provisionModal">
+          <header class="pf-c-modal-box__header">
+              <h1 class="pf-c-modal-box__title">Device added successfully!</h1>
+          </header>
+          <div class="pf-c-modal-box__body">
+              Do you want to provision the device?
+          </div>
+          <footer class="pf-c-modal-box__footer">
+              <button class="pf-c-button pf-m-primary" id="provisionYes">Yes</button>
+              <button class="pf-c-button pf-m-secondary" id="provisionNo">No</button>
+          </footer>
+      </div>
   </div>
-  <footer class="pf-c-modal-box__footer">
-    <button class="pf-c-button pf-m-primary" id="provisionYes">Yes</button>
-    <button class="pf-c-button pf-m-secondary" id="provisionNo">No</button>
-  </footer>
-</div>
     <script src="firebase.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -191,6 +226,7 @@
                 element.classList.toggle('dark-mode');
             });
         }
+        
     </script>
 </body>
 </html>

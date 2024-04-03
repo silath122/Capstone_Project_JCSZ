@@ -191,7 +191,7 @@
         /* Dark Mode Styles */
         .dark-mode {
             background-color: #343a40;
-            color: #ffffff;
+            color: #121111;
         }
 
         .dark-mode .navbar {
@@ -212,7 +212,7 @@
         }
 
         .dark-mode .device-details {
-          background-color: #ababab;
+          background-color: #dbdbdb;
         }
 
         /* Toggle Icon Style */
@@ -323,8 +323,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
             provisionDeviceBtn.addEventListener('click', function () {
                 createDeviceBranch(deviceName);
-                // Redirect to provision_device.html
-                // window.location.href = 'provision_device.html';
             });
                 } else {
                     console.error('Provider image link not found');
@@ -365,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Add your GitHub Personal Access Token here
-const githubToken = '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';
+const githubToken = 'token';
 
 const repoOwner = 'juliakempton'; // Replace with the owner of the repository
 const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
