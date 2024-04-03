@@ -84,6 +84,7 @@
         .device-details h2 {
             margin-top: 0;
             color: #28609e;
+            font-weight: bold;
         }
 
         .device-details p {
@@ -190,7 +191,7 @@
         /* Dark Mode Styles */
         .dark-mode {
             background-color: #343a40;
-            color: #ffffff;
+            color: #121111;
         }
 
         .dark-mode .navbar {
@@ -208,6 +209,10 @@
 
         .dark-mode .toggle-icon {
             color: #ffffff; /* White color for the icon in dark mode */
+        }
+
+        .dark-mode .device-details {
+          background-color: #dbdbdb;
         }
 
         /* Toggle Icon Style */
@@ -257,61 +262,43 @@
         </div>
     </div>
 
-    <!-- Popup for editing device details -->
-    <div id="editDevicePopup" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Edit Device Details</h2>
-            <form id="editDeviceForm">
-                <!-- Input fields for editing device details -->
-                <input type="text" id="editDeviceName" placeholder="Device Name"><br>
-                <input type="text" id="editProvider" placeholder="Provider"><br>
-                <input type="text" id="editProductSpecs" placeholder="Product Specifications Link"><br>
-
-                <!-- Certifications input --> 
-                <div id="certificationsInput">
-                    <h3>Certifications</h3>
-                    <div class="certification">
-                        <input type="text" name="certificationProductName" placeholder="Certification Product Name">
-                        <input type="text" name="certificationArchitecture" placeholder="Certification Architecture">
-                    </div>
-                </div>
-                <button type="button" id="addCertificationInput">Add Certification</button>
-
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
-
     <script src="firebase.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get device name from URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const deviceName = urlParams.get('device');
+   <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Get device name from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const deviceName = urlParams.get('device');
 
-            // Reference to Firestore collection
-            const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
-            const certificationsRef = devicesRef.collection('certifications');
+    // Reference to Firestore collection
+    const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
+    const certificationsRef = devicesRef.collection('certifications');
 
-            // Get device details
-            devicesRef.get().then((doc) => {
-                if (doc.exists) {
-                    const deviceData = doc.data();
-                    const deviceDetailsDiv = document.getElementById('deviceDetails');
+    // Get device details
+    devicesRef.get().then((doc) => {
+        if (doc.exists) {
+            const deviceData = doc.data();
+            const deviceDetailsDiv = document.getElementById('deviceDetails');
+            
+            // Get provider name
+            const providerName = deviceData.provider;
 
-                    // Check if cached image exists
-                    const cachedImage = localStorage.getItem(deviceName + '_image');
-                    const imageUrl = cachedImage ? cachedImage : deviceData.image;
+            // Reference to provider-image-links collection
+            const providerImageLinksRef = firebase.firestore().collection('provider-image-links').doc(providerName);
+
+            // Get image link for the provider
+            providerImageLinksRef.get().then((providerDoc) => {
+                if (providerDoc.exists) {
+                    const providerImageData = providerDoc.data();
+                    const imageUrl = providerImageData.imageLink;
 
                     // Construct device details HTML
                     const deviceDetailsHTML = `
                     <div class="detail-header">
-                      <img src="${imageUrl}" alt="${deviceData.name}">
-                <div class="buttons-container">
-                      <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
-                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
-            </div>
+                        <img src="${imageUrl}" alt="${deviceData.name}">
+                        <div class="buttons-container">
+                            <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                            <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                        </div>
                     </div>
                     <div class="detail-body-container">
                         <div class="detail-body">
@@ -320,146 +307,63 @@
                             <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
                             <div class="certifications">
                                 <div class="dropdown">
-                                    <h3>Certifications</h3>
+                                    <h3 style="cursor: pointer;">Certifications</h3>
                                     <div class="dropdown-content" id="certificationsDropdown">
                                         <!-- Certifications will be dynamically inserted here -->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     `;
 
                     // Insert device details HTML
                     deviceDetailsDiv.innerHTML = deviceDetailsHTML;
-
-                    // Get certifications
-                    certificationsRef.get().then((querySnapshot) => {
-                        const certificationsDropdown = document.getElementById('certificationsDropdown');
-
-                        querySnapshot.forEach((doc) => {
-                            const certificationData = doc.data();
-                            const certificationName = doc.id; // Certification document ID is the certification name
-                            const architecture = certificationData.architecture;
-                            const product = certificationData.product;
-
-                            // Create dropdown item for each certification
-                            const certificationItem = document.createElement('a');
-                            certificationItem.innerHTML = `
-                                <strong>${certificationName
-                                }</strong><br>
-                                Architecture: ${architecture}<br>
-                                Product: ${product}
-                            `;
-                            certificationsDropdown.appendChild(certificationItem);
-                        });
-                    }).catch((error) => {
-                        console.error('Error getting certifications:', error);
-                    });
-
                     // Add event listener to the "Provision Device" button
-                    const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
-                    provisionDeviceBtn.addEventListener('click', function () {
+            const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
+            provisionDeviceBtn.addEventListener('click', function () {
                 createDeviceBranch(deviceName);
-                        // Redirect to provision_device.html
-                        //window.location.href = 'provision_device.html';
-                    });
-
-                    // Event listener for edit device button
-                    const editDeviceBtn = document.getElementById('editDeviceBtn');
-                    editDeviceBtn.addEventListener('click', function () {
-                        // Display the edit device popup
-                        editDevicePopup.style.display = 'block';
-
-                        // Input fields with current device details
-                        document.getElementById('editDeviceName').value = deviceData.name;
-                        document.getElementById('editProvider').value = deviceData.provider;
-                        document.getElementById('editProductSpecs').value = deviceData.productSpecsLink;
-
-                    });
-
-                    // Event listener for closing the edit device popup
-                    const closePopupBtn = editDevicePopup.querySelector('.close');
-                    closePopupBtn.addEventListener('click', function () {
-                        // Close the edit device popup
-                        editDevicePopup.style.display = 'none';
-                    });
-
-                    // Event listener for adding certification input
-                    document.getElementById('addCertificationInput').addEventListener('click', function () {
-                        var certificationsInput = document.getElementById('certificationsInput');
-                        var newCertificationDiv = document.createElement('div');
-                        newCertificationDiv.classList.add('certification');
-                        newCertificationDiv.innerHTML = `
-                            <input type="text" name="certificationProductName" placeholder="Certification Product Name">
-                            <input type="text" name="certificationArchitecture" placeholder="Certification Architecture">
-                        `;
-                        certificationsInput.appendChild(newCertificationDiv);
-                    });
-
-                    // Event listener for submitting the edit device form
-                    const editDeviceForm = document.getElementById('editDeviceForm');
-                    editDeviceForm.addEventListener('submit', function (event) {
-                        event.preventDefault();
-
-                        // Get edited device details from input fields
-                        const editedDeviceName = document.getElementById('editDeviceName').value.trim();
-                        const editedProvider = document.getElementById('editProvider').value.trim();
-                        const editedProductSpecs = document.getElementById('editProductSpecs').value.trim();
-
-                        // Get edited certifications
-                        const editedCertifications = [];
-                        document.querySelectorAll('#certificationsInput .certification').forEach(certDiv => {
-                            const productName = certDiv.querySelector('[name="certificationProductName"]').value.trim();
-                            const architecture = certDiv.querySelector('[name="certificationArchitecture"]').value.trim();
-                            editedCertifications.push({ product: productName, architecture: architecture });
-                        });
-
-                        // Update device details in the Firebase database
-                        devicesRef.update({
-                            name: editedDeviceName,
-                            provider: editedProvider,
-                            productSpecsLink: editedProductSpecs
-                        })
-                        .then(() => {
-                            // Update certifications in the sub-collection under the device document
-                            const batch = firebase.firestore().batch();
-                            const certificationsCollection = devicesRef.collection('certifications');
-                            certificationsCollection.get().then((querySnapshot) => {
-                                querySnapshot.forEach((doc) => {
-                                    batch.delete(doc.ref); // Delete existing certifications
-                                });
-                                editedCertifications.forEach((certification) => {
-                                    batch.set(certificationsCollection.doc(certification.product), certification); // Add updated certifications
-                                });
-                                return batch.commit();
-                            }).then(() => {
-                                // Close the edit device popup
-                                editDevicePopup.style.display = 'none';
-                                // Refresh the page to reflect the updated device details
-                                location.reload();
-                            }).catch((error) => {
-                                console.error('Error updating certifications:', error);
-                                // Handle error
-                            });
-                        })
-                        .catch((error) => {
-                            console.error('Error updating device details:', error);
-                            // Handle error
-                        });
-                    });
+            });
                 } else {
-                    console.error('Device not found');
+                    console.error('Provider image link not found');
                 }
             }).catch((error) => {
-                console.error('Error getting device details:', error);
+                console.error('Error getting provider image link:', error);
             });
 
-        });
+            // Get certifications
+            certificationsRef.get().then((querySnapshot) => {
+                const certificationsDropdown = document.getElementById('certificationsDropdown');
+
+                querySnapshot.forEach((doc) => {
+                    const certificationData = doc.data();
+                    const certificationName = doc.id; // Certification document ID is the certification name
+                    const architecture = certificationData.architecture;
+                    const product = certificationData.product;
+
+                    // Create dropdown item for each certification
+                    const certificationItem = document.createElement('a');
+                    certificationItem.innerHTML = `
+                        <strong>${certificationName}</strong><br>
+                        Architecture: ${architecture}<br>
+                        Product: ${product}
+                    `;
+                    certificationsDropdown.appendChild(certificationItem);
+                });
+            }).catch((error) => {
+                console.error('Error getting certifications:', error);
+            });
+        } else {
+            console.error('Device not found');
+        }
+    }).catch((error) => {
+        console.error('Error getting device details:', error);
+    });
+});
+
 
 // Add your GitHub Personal Access Token here
-const githubToken = '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';
+const githubToken = 'token';
 
 const repoOwner = 'juliakempton'; // Replace with the owner of the repository
 const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
@@ -637,4 +541,4 @@ async function createPullRequest(repoOwner, repoName, branchName) {
             });
         }
 
-    </script>
+</script>

@@ -43,7 +43,7 @@
         }
     
         .container > div {
-            margin: 20px;
+            margin: 10px;
             text-align: center;
         }
     
@@ -61,28 +61,33 @@
     
         .device-card {
             border: 1px solid #ccc; /* Add border around each device */
-            padding: 10px; /* Add padding inside each device */
+            padding: 20px; /* Add padding inside each device */
             text-align: center; /* Center content */
             width: 200px; /* Set fixed width */
-            height: 275px; /* Set fixed height */
+            height: 300px; /* Set fixed height */
             display: flex; /* Use flexbox to center content vertically */
             flex-direction: column; /* Stack elements vertically */
             justify-content: center; /* Center content vertically */
+            border-radius: 10px;
+            border-width: 2px;
+            cursor: pointer;
         }
     
         .device-card img {
             max-width: 100%;
             height: auto;
         }
-    
+
         .device-name {
             font-weight: bold;
             margin-top: 10px;
+            font-size: 14px;
         }
     
         .device-provider {
             color: #666;
             margin-top: 5px;
+            font-size: 11px;
         }
 
         .search-container {
@@ -120,6 +125,10 @@
         #edge-devices {
             flex-grow: 1;
             margin-top: 10px;
+        }
+
+        #provider-filters input[type="checkbox"] {
+          margin-right: 10px; /* Adjust the space as needed */
         }
 
         @media only screen and (max-width: 400px) {
@@ -296,12 +305,20 @@
             color: #ffffff;
         }
 
+        .dark-mode .device-card {
+          background-color: #707070;
+        }
+
         .dark-mode .navbar {
             background-color: #313539;
             border-color: #343a40;
         }
         .dark-mode .navbar-brand .text, .dark-mode .device-provider {
             color: #ffffff; /* Makes text white in dark mode */
+        }
+
+        .dark-mode .search-box {
+            color: black; /* Makes text white in dark mode */
         }
 
         .dark-mode .btn-primary {
@@ -333,7 +350,7 @@
 
     </style>
 </head>
-<body onload="fetchEdgeDevices()">
+<body>
     <header class="navbar navbar-default navbar-static-top">
         <div class="navbar-header">
             <a class="navbar-brand" href="index.html">
