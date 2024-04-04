@@ -243,6 +243,24 @@
             width: 175px; /* Ensure consistent button width */
             /* Other styles remain unchanged */
         }
+
+        @media only screen and (max-width: 400px) {
+            .details-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.6);
+            }
+        }
+
+        @media only screen and (min-width: 401px) and (max-width: 500px) {
+            .details-container {
+                width: 100vw;
+                height: 100vh;
+                transform-origin: top left;
+                transform: scale(0.8);
+            }
+        }
     </style>
 </head>
 <body>
@@ -293,23 +311,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // Construct device details HTML
                     const deviceDetailsHTML = `
-                    <div class="detail-header">
-                        <img src="${imageUrl}" alt="${deviceData.name}">
-                        <div class="buttons-container">
-                            <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
-                            <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                    <div class="details-container">
+                        <div class="detail-header">
+                            <img src="${imageUrl}" alt="${deviceData.name}">
+                            <div class="buttons-container">
+                                <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="detail-body-container">
-                        <div class="detail-body">
-                            <h2>${deviceData.name}</h2>
-                            <p>Provider: ${deviceData.provider}</p>
-                            <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
-                            <div class="certifications">
-                                <div class="dropdown">
-                                    <h3 style="cursor: pointer;">Certifications</h3>
-                                    <div class="dropdown-content" id="certificationsDropdown">
-                                        <!-- Certifications will be dynamically inserted here -->
+                        <div class="detail-body-container">
+                            <div class="detail-body">
+                                <h2>${deviceData.name}</h2>
+                                <p>Provider: ${deviceData.provider}</p>
+                                <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                                <div class="certifications">
+                                    <div class="dropdown">
+                                        <h3 style="cursor: pointer;">Certifications</h3>
+                                        <div class="dropdown-content" id="certificationsDropdown">
+                                            <!-- Certifications will be dynamically inserted here -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
