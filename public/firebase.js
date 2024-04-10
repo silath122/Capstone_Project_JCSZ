@@ -17,6 +17,22 @@ firebase.initializeApp(firebaseConfig);
 // Reference to firestore database
 var db = firebase.firestore();
 
+// Reference to the device providers in your Firebase database
+const deviceProvidersRef = db.collection('provider-image-links');
+
+// Fetch data from firestore and populate the dropdown
+deviceProvidersRef.get().then((querySnapshot) => {
+    const deviceProviderSelect = document.getElementById('deviceProvider');
+    querySnapshot.forEach((doc) => {
+        const option = document.createElement('option');
+        option.textContent = doc.data().provider;
+        option.value = doc.id;
+        deviceProviderSelect.appendChild(option);
+    });
+}).catch((error) => {
+    console.error('Error fetching device providers:', error);
+})
+
 // Function to fetch data either from cache or Firestore
 async function fetchWithCache(collectionName) {
     var dataFromCache = localStorage.getItem(collectionName);
@@ -46,9 +62,9 @@ async function updateLastUpdateTime() {
 
 // Form submission event listener
 document.addEventListener('DOMContentLoaded', function () {
+    
     document.getElementById('deviceForm').addEventListener('submit', async function (event) {
         event.preventDefault();
-
         
 
         var deviceName = document.getElementById('deviceName').value.trim();
@@ -56,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var deviceProductSpecs = document.getElementById('deviceProductSpecs').value.trim();
 
         if (deviceName === '' || deviceProvider === '' || deviceProductSpecs == '') {
-            alert('Please fill in both device type, device software, and the device product specification link.');
+            alert('Please fill/select in both device type, device software, and the device product specification link.');
             return;
         }
         else {
@@ -312,12 +328,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         certificationsDiv.insertBefore(newCertificationDiv, document.getElementById('addCertification'));
     });
-            // Event listener for input changes
-        document.getElementById('deviceProvider').addEventListener('input', function (event) {
-            var selectedProvider = event.target.value.trim();
-            console.log("Selected provider:", selectedProvider); // Log selected provider
-            document.getElementById("providerDropdown").innerText = selectedProvider; // Update button text
-        });
+
+    // Event listener for input changes
+    document.getElementById('deviceProvider').addEventListener('input', function (event) {
+        var selectedProvider = event.target.value.trim();
+        console.log("Selected provider:", selectedProvider); // Log selected provider
+        document.getElementById("providerDropdown").innerText = selectedProvider; // Update button text
+    });
 
 
     // Search devices event listener
@@ -332,52 +349,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
-
-// Fetch providers from Firestore and populate dropdown for add_edge_device.html page
-async function fetchProvidersAddEdge() {
-    var providerDropdownMenu = document.getElementById("providerDropdownMenu");
-    if (!providerDropdownMenu) return;
-
-    try {
-        var snapshot = await db.collection("provider-image-links").get();
-        snapshot.forEach((doc) => {
-            var providerName = doc.data().provider;
-            var listItem = document.createElement("li");
-            var anchor = document.createElement("a");
-            anchor.href = "#";
-            anchor.textContent = providerName;
-            anchor.dataset.provider = providerName; // Store provider name as a dataset attribute
-            listItem.appendChild(anchor);
-            providerDropdownMenu.appendChild(listItem);
-        });
-
-        // Add event listener to the dropdown menu to handle item clicks
-        providerDropdownMenu.addEventListener('click', function(event) {
-            var selectedProvider = event.target.dataset.provider; // Retrieve provider name from dataset attribute
-            if (selectedProvider) {
-                console.log("Selected provider:", selectedProvider); // Log selected provider
-                document.getElementById("providerDropdown").innerText = selectedProvider; // Update button text
-            }
-        });
-
-    } catch (error) {
-        console.error("Error fetching providers: ", error);
-    }
-
-    console.log("Fetching provider data...");
-    try {
-        var snapshot = await db.collection("provider-image-links").get();
-        var providerNames = [];
-        snapshot.forEach((doc) => {
-            var providerName = doc.id;
-            providerNames.push(providerName); // Store provider names
-        });
-        console.log("Provider names:", providerNames); // Log retrieved provider names
-    } catch (error) {
-        console.error("Error fetching providers: ", error);
-    }
-}
 
 
 // Fetch edge devices from Firestore or cache
@@ -541,7 +512,6 @@ function searchDevices() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetchProvidersAddEdge();
     fetchEdgeDevices();
     fetchProviders();
 });

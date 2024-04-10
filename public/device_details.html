@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Device Details</title>
-
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -14,27 +13,21 @@
         header {
             display: flex;
         }
-
         .navbar-brand .logo {
             width: 30px;
             height: auto;
             margin-right: 10px;
             display: inline-block;
         }
-
         .navbar-brand .text {
             display: inline-block;
         }
-
-
-
         .device-details-container {
             display: flex;
             justify-content: center;
             align-items: center;
             margin-top: 20px;
         }
-
         .device-details {
             border: 1px solid #ccc;
             background-color: white;
@@ -46,24 +39,20 @@
             display: flex;
             flex-direction: column;
         }
-
         .detail-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .detail-body {
             width: 100%; /* Set the body width to match the header */
         }
-
         .detail-header img {
             width: 200px; /* Set the desired width */
             height: 200px; /* Set the desired height */
             object-fit: contain; /* Maintain aspect ratio without cropping */
             border-radius: 5px;
         }
-
         .edit-device-btn {
             background-color: #28609e;
             border-color: #28609e;
@@ -71,7 +60,6 @@
             padding: 10px 20px;
             font-size: 16px;
         }
-
         .provision-device-btn {
             background-color: #28609e;
             border-color: #28609e;
@@ -84,45 +72,37 @@
         .device-details h2 {
             margin-top: 0;
             color: #28609e;
-            font-weight: bold;
         }
 
         .device-details p {
             margin: 10px 0;
         }
-
         .certifications h3 {
             color: #28609e;
         }
-
         .certifications ul {
             list-style-type: none;
             padding: 0;
             margin-top: 10px;
         }
-
         .certifications ul li {
             margin-bottom: 10px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 10px;
         }
-
         .certifications ul li:last-child {
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
         .certifications ul li strong {
             color: #28609e;
         }
-
         /* Dropdown styles */
         .dropdown {
             position: relative;
             display: inline-block;
         }
-
         .dropdown-content {
             display: none;
             position: absolute;
@@ -132,26 +112,21 @@
             z-index: 1;
             border-radius: 5px;
         }
-
         .dropdown-content a {
             color: black;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
         }
-
         .dropdown-content a:hover {
             background-color: #f1f1f1;
         }
-
         .dropdown:hover .dropdown-content {
             display: block;
         }
-
         .detail-body-container {
             display: flex;
         }
-
         .detail-body {
             flex: 1;
         }
@@ -165,33 +140,28 @@
             border-radius: 20px; /* Rounded edges */
             /* If you need additional styles, add them here */
         }
-
         /* Specific adjustments for positioning if needed */
         .navbar-back-button, .add-more-btn, .submit-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
         }
-
         .navbar-back-button {
             right: 60px; /* Adjust this based on your layout */
         }
-
         
-
         /* Hover and focus states can also be generalized */
         .navbar-button-style:hover {
             background-color: #204d74 !important; /* Override hover color */
             border-color: #204d74 !important;
         }
-
         .navbar-button-style:focus {
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
         /* Dark Mode Styles */
         .dark-mode {
             background-color: #343a40;
-            color: #121111;
+            color: #ffffff;
         }
 
         .dark-mode .navbar {
@@ -201,18 +171,12 @@
         .dark-mode .navbar-brand .text, .dark-mode .device-provider {
             color: #ffffff; /* Makes text white in dark mode */
         }
-
         .dark-mode .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
-
         .dark-mode .toggle-icon {
             color: #ffffff; /* White color for the icon in dark mode */
-        }
-
-        .dark-mode .device-details {
-          background-color: #dbdbdb;
         }
 
         /* Toggle Icon Style */
@@ -226,7 +190,6 @@
             z-index: 1000;
             color: #28609e;
         }
-
         /* Adjust the navbar to ensure proper positioning */
         .navbar {
             position: relative;
@@ -237,35 +200,10 @@
             align-items: flex-start; /* Align buttons to the left */
             gap: 10px; /* Add space between buttons */
         }
-
         /* Adjust the button styles if necessary */
         .navbar-button-style {
             width: 175px; /* Ensure consistent button width */
             /* Other styles remain unchanged */
-        }
-
-        @media only screen and (max-width: 400px) {
-            .details-container {
-                width: 100vw;
-                height: 100vh;
-                transform-origin: top left;
-                transform: scale(0.6);
-            }
-        }
-
-        @media only screen and (min-width: 401px) and (max-width: 500px) {
-            .details-container {
-                width: 100vw;
-                height: 100vh;
-                transform-origin: top left;
-                transform: scale(0.8);
-            }
-        }
-        .translate-button {
-            position: absolute; /* Absolute positioning relative to nearest positioned ancestor (navbar) */
-            right: 150px; /* Distance from the right edge of the navbar */
-            top: 50%; /* Center it vertically */
-            transform: translateY(-40%); /* Offset the y-position to ensure it's perfectly centered */
         }
     </style>
 </head>
@@ -285,7 +223,7 @@
             </script>
             <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         </div>
-        <a href="select_edge_device.html" class="btn btn-primary navbar-button-style navbar-back-button" style="width: 65px;">Back</a>
+        <a href="select_edge_device.html" class="btn btn-primary navbar-button-style navbar-back-button">Back</a>
         <i class="fas fa-lightbulb toggle-icon" onclick="toggleDarkMode()"></i>
     </header>
     <div class="device-details-container">
@@ -294,121 +232,229 @@
         </div>
     </div>
 
+    <!-- Popup for editing device details -->
+    <div id="editDevicePopup" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Device Details</h2>
+            <form id="editDeviceForm">
+                <!-- Input fields for editing device details -->
+                <div class="form-group">
+                    <label for="editDeviceName">Device Name:</label>
+                    <input type="text" id="editDeviceName" placeholder="Device Name">
+                </div>
+                <div class="form-group">
+                    <label for="editProvider">Provider:</label>
+                    <input type="text" id="editProvider" placeholder="Provider">
+                </div>
+                <div class="form-group">
+                    <label for="editProductSpecs">Product Specifications Link:</label>
+                    <input type="text" id="editProductSpecs" placeholder="Product Specifications Link">
+                </div>
+                
+                <h3>Certifications</h3>
+                <!-- Input fields for editing certifications -->
+                <div id="certifications" class="form-group">
+                    <!-- Certifications will be dynamically added here -->
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
     <script src="firebase.js"></script>
-   <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Get device name from URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const deviceName = urlParams.get('device');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get device name from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const deviceName = urlParams.get('device');
 
-    // Reference to Firestore collection
-    const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
-    const certificationsRef = devicesRef.collection('certifications');
+            // Reference to Firestore collection
+            const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
+            const certificationsRef = devicesRef.collection('certifications');
 
-    // Get device details
-    devicesRef.get().then((doc) => {
-        if (doc.exists) {
-            const deviceData = doc.data();
-            const deviceDetailsDiv = document.getElementById('deviceDetails');
-            
-            // Get provider name
-            const providerName = deviceData.provider;
+            // Get device details
+            devicesRef.get().then((doc) => {
+                if (doc.exists) {
+                    const deviceData = doc.data();
+                    const deviceDetailsDiv = document.getElementById('deviceDetails');
 
-            // Reference to provider-image-links collection
-            const providerImageLinksRef = firebase.firestore().collection('provider-image-links').doc(providerName);
-
-            // Get image link for the provider
-            providerImageLinksRef.get().then((providerDoc) => {
-                if (providerDoc.exists) {
-                    const providerImageData = providerDoc.data();
-                    const imageUrl = providerImageData.imageLink;
+                    // Check if cached image exists
+                    const cachedImage = localStorage.getItem(deviceName + '_image');
+                    const imageUrl = cachedImage ? cachedImage : deviceData.image;
 
                     // Construct device details HTML
                     const deviceDetailsHTML = `
-                    <div class="details-container">
-                        <div class="detail-header">
-                            <img src="${imageUrl}" alt="${deviceData.name}">
-                            <div class="buttons-container">
-                                <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
-                                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
-                            </div>
-                        </div>
-                        <div class="detail-body-container">
-                            <div class="detail-body">
-                                <h2>${deviceData.name}</h2>
-                                <p>Provider: ${deviceData.provider}</p>
-                                <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
-                                <div class="certifications">
-                                    <div class="dropdown">
-                                        <h3 style="cursor: pointer;">Certifications</h3>
-                                        <div class="dropdown-content" id="certificationsDropdown">
-                                            <!-- Certifications will be dynamically inserted here -->
-                                        </div>
+                    <div class="detail-header">
+                      <img src="${imageUrl}" alt="${deviceData.name}">
+                <div class="buttons-container">
+                      <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                </div>
+                    </div>
+                    <div class="detail-body-container">
+                        <div class="detail-body">
+                            <h2>${deviceData.name}</h2>
+                            <p>Provider: ${deviceData.provider}</p>
+                            <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                            <div class="certifications">
+                                <div class="dropdown">
+                                    <h3>Certifications</h3>
+                                    <div class="dropdown-content" id="certificationsDropdown">
+                                        <!-- Certifications will be dynamically inserted here -->
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     `;
 
                     // Insert device details HTML
                     deviceDetailsDiv.innerHTML = deviceDetailsHTML;
+
+                    // Get certifications
+                    certificationsRef.get().then((querySnapshot) => {
+                        const certificationsDropdown = document.getElementById('certificationsDropdown');
+                        const certificationDiv = document.getElementById('certifications');
+
+                        querySnapshot.forEach((doc) => {
+                            const certificationData = doc.data();
+                            const certificationName = doc.id; // Certification document ID is the certification name
+                            const architecture = certificationData.architecture;
+                            const product = certificationData.product;
+
+                            // Create dropdown item for each certification
+                            const certificationItem = document.createElement('a');
+                            certificationItem.innerHTML = `
+                                <strong>${certificationName}</strong><br>
+                                Architecture: ${architecture}<br>
+                                Product: ${product}
+                            `;
+                            certificationsDropdown.appendChild(certificationItem);
+                            
+                            // Create inputs for each certification in edit popup
+                            const certificationInputsHTML = `
+                                <div class="certification">
+                                    <label for="${certificationName}_product">Product:</label>
+                                    <input type="text" id="${certificationName}_product" value="${product}">
+                                    <label for="${certificationName}_architecture">Architecture:</label>
+                                    <input type="text" id="${certificationName}_architecture" value="${architecture}">
+                                </div>
+                            `;
+                            certificationDiv.innerHTML += certificationInputsHTML;
+                        });
+                    }).catch((error) => {
+                        console.error('Error getting certifications:', error);
+                    });
+
                     // Add event listener to the "Provision Device" button
-            const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
-            provisionDeviceBtn.addEventListener('click', function () {
-                createDeviceBranch(deviceName);
-            });
+                    const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
+                    provisionDeviceBtn.addEventListener('click', function () {
+                    createDeviceBranch(deviceName);
+                        // Redirect to provision_device.html
+                        //window.location.href = 'provision_device.html';
+                    });
+
+                    // Event listener for edit device button
+                    const editDeviceBtn = document.getElementById('editDeviceBtn');
+                    editDeviceBtn.addEventListener('click', function () {
+                        // Display the edit device popup
+                        editDevicePopup.style.display = 'block';
+
+                        // Input fields with current device details
+                        document.getElementById('editDeviceName').value = deviceData.name;
+                        document.getElementById('editProvider').value = deviceData.provider;
+                        document.getElementById('editProductSpecs').value = deviceData.productSpecsLink;
+
+
+                    });
+
+                    // Event listener for closing the edit device popup
+                    const closePopupBtn = editDevicePopup.querySelector('.close');
+                    closePopupBtn.addEventListener('click', function () {
+                        // Close the edit device popup
+                        editDevicePopup.style.display = 'none';
+                    });
+
+                    // Event listener for adding certification input
+                    document.getElementById('addCertificationInput').addEventListener('click', function () {
+                        var certificationsInput = document.getElementById('certificationsInput');
+                        var newCertificationDiv = document.createElement('div');
+                        newCertificationDiv.classList.add('certification');
+                        newCertificationDiv.innerHTML = `
+                            <input type="text" name="certificationProductName" placeholder="Certification Product Name">
+                            <input type="text" name="certificationArchitecture" placeholder="Certification Architecture">
+                        `;
+                        certificationsInput.appendChild(newCertificationDiv);
+                    });
+
+                    // Event listener for submitting the edit device form
+                    const editDeviceForm = document.getElementById('editDeviceForm');
+                    editDeviceForm.addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        // Get edited device details from input fields
+                        const editedDeviceName = document.getElementById('editDeviceName').value.trim();
+                        const editedProvider = document.getElementById('editProvider').value.trim();
+                        const editedProductSpecs = document.getElementById('editProductSpecs').value.trim();
+
+
+
+                        // Update device details in the Firebase database
+                        devicesRef.update({
+                            name: editedDeviceName,
+                            provider: editedProvider,
+                            productSpecsLink: editedProductSpecs
+                        })
+                        .then(() => {
+                            // Update certifications in Firestore
+                            const certificationInputs = document.querySelectorAll('.certification');
+                            certificationInputs.forEach(certificationInput => {
+                                const certificationName = certificationInput.id; // Certification name from ID
+                                const product = certificationInput.querySelector('input[type="text"][id$="_product"]').value;
+                                const architecture = certificationInput.querySelector('input[type="text"][id$="_architecture"]').value;
+
+                                // Update certification data in Firestore
+                                certificationsRef.doc(certificationName).update({
+                                    product: product,
+                                    architecture: architecture
+                                });
+                            }).then(() => {
+                                // Close the edit device popup
+                                editDevicePopup.style.display = 'none';
+                                // Refresh the page to reflect the updated device details
+                                location.reload();
+                            }).catch((error) => {
+                                console.error('Error updating certifications:', error);
+                                // Handle error
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error updating device details:', error);
+                            // Handle error
+                        });
+                    });
                 } else {
-                    console.error('Provider image link not found');
+                    console.error('Device not found');
                 }
             }).catch((error) => {
-                console.error('Error getting provider image link:', error);
+                console.error('Error getting device details:', error);
             });
 
-            // Get certifications
-            certificationsRef.get().then((querySnapshot) => {
-                const certificationsDropdown = document.getElementById('certificationsDropdown');
-
-                querySnapshot.forEach((doc) => {
-                    const certificationData = doc.data();
-                    const certificationName = doc.id; // Certification document ID is the certification name
-                    const architecture = certificationData.architecture;
-                    const product = certificationData.product;
-
-                    // Create dropdown item for each certification
-                    const certificationItem = document.createElement('a');
-                    certificationItem.innerHTML = `
-                        <strong>${certificationName}</strong><br>
-                        Architecture: ${architecture}<br>
-                        Product: ${product}
-                    `;
-                    certificationsDropdown.appendChild(certificationItem);
-                });
-            }).catch((error) => {
-                console.error('Error getting certifications:', error);
-            });
-        } else {
-            console.error('Device not found');
-        }
-    }).catch((error) => {
-        console.error('Error getting device details:', error);
-    });
-});
-
+        });
 
 // Add your GitHub Personal Access Token here
-const githubToken = 'token';
+const githubToken = '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';
 
 const repoOwner = 'juliakempton'; // Replace with the owner of the repository
 const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
 const prTitle = 'New Pull Request'; // Title of the pull request
 const prBody = 'This is a new pull request created using the GitHub API.'; // Body of the pull request
 const fileContent = 'This is a new file added via API.';
-
 async function createDeviceBranch(deviceName) {
     const repoOwner = 'juliakempton'; // Replace with the owner of the repository
     const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-
     // Fetch the latest commit SHA of the main branch
     const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
     const mainBranchResponse = await fetch(mainBranchUrl, {
@@ -419,24 +465,18 @@ async function createDeviceBranch(deviceName) {
     });
     const mainBranchData = await mainBranchResponse.json();
     const mainBranchSha = mainBranchData.commit.sha;
-
     // Create a unique branch name based on device name and count
     const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
-
     // Create a new branch from the main branch
     await createBranch(repoOwner, repoName, branchName, mainBranchSha);
-
     // Create a new file in the devices folder
     const fileName = `${branchName}.txt`; // Example: "DeviceName_BranchName.txt"
     await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
-
     // Create a pull request to merge the new branch with the main branch
     await createPullRequest(repoOwner, repoName, branchName);
 }
-
 async function createUniqueBranchName(repoOwner, repoName, deviceName) {
     const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
-
     try {
         const branchesResponse = await fetch(branchesUrl, {
             headers: {
@@ -444,33 +484,26 @@ async function createUniqueBranchName(repoOwner, repoName, deviceName) {
                 'Content-Type': 'application/json',
             },
         });
-
         if (!branchesResponse.ok) {
             throw new Error('Error fetching branches data');
         }
-
         const branchesData = await branchesResponse.json();
-
         const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
         const branchCount = deviceBranches.length;
-
         // Create a unique branch name based on device name and count
         const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
-
         return uniqueBranchName;
     } catch (error) {
         console.error('Error creating unique branch name:', error);
         return null;
     }
 }
-
 async function createBranch(repoOwner, repoName, branchName, baseSha) {
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
     const requestData = {
         ref: `refs/heads/${branchName}`,
         sha: baseSha,
     };
-
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -487,13 +520,11 @@ async function createBranch(repoOwner, repoName, branchName, baseSha) {
         console.error('Error creating branch:', error);
     }
 }
-
 async function addFileToRepo(fileName, fileContent, branchName) {
     const repoOwner = 'juliakempton'; // Replace with the owner of the repository
     const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
     const filePath = `devices/${fileName}`; // Specify the file path in the repository
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-
     // Get the current file SHA if it exists
     const getFileUrl = `${apiUrl}?ref=${branchName}`;
     const getFileResponse = await fetch(getFileUrl, {
@@ -504,14 +535,12 @@ async function addFileToRepo(fileName, fileContent, branchName) {
     });
     const getFileData = await getFileResponse.json();
     const fileSha = getFileData.sha;
-
     const requestData = {
         message: `Add ${fileName}`, // Commit message
         content: btoa(fileContent), // Encode file content in base64
         branch: branchName, // Specify the branch
         sha: fileSha, // Provide the SHA if the file exists, or null if it's a new file
     };
-
     try {
         const response = await fetch(apiUrl, {
             method: 'PUT', // Use PUT to update the file
@@ -528,7 +557,6 @@ async function addFileToRepo(fileName, fileContent, branchName) {
         console.error('Error adding/updating file:', error);
     }
 }
-
 async function createPullRequest(repoOwner, repoName, branchName) {
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
     const requestData = {
@@ -537,7 +565,6 @@ async function createPullRequest(repoOwner, repoName, branchName) {
         head: branchName, // Branch you're merging from
         base: 'main', // Branch you're merging into
     };
-
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -556,6 +583,7 @@ async function createPullRequest(repoOwner, repoName, branchName) {
         console.error('Error creating pull request:', error);
     }
 }
+
     document.addEventListener('DOMContentLoaded', () => {
             const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
             if (isDarkModeEnabled) {
@@ -575,4 +603,4 @@ async function createPullRequest(repoOwner, repoName, branchName) {
             });
         }
 
-</script>
+    </script>
