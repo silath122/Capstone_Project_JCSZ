@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provision Device</title>
+    <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom CSS for logo */
+        .navbar-brand .logo {
+            width: 30px; 
+            height: auto;
+            margin-right: 10px;
+            display: inline-block; /* Make logo and text inline */
+        }
+
+        .navbar-brand .text {
+            display: inline-block; /* Make text inline */
+        }
+
+        /* General button style */
+        .navbar-button-style {
+            color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
+        }
+
+        /* Specific adjustments for positioning if needed */
+        .navbar-back-button, .add-more-btn, .submit-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .navbar-back-button {
+            right: 60px; /* Adjust this based on your layout */
+        }
+
+        /* Hover and focus states can also be generalized */
+        .navbar-button-style:hover {
+            background-color: #204d74 !important; /* Override hover color */
+            border-color: #204d74 !important;
+        }
+
+        .navbar-button-style:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
+        }
+
+        /* Dark Mode Styles */
+        .dark-mode {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .dark-mode .navbar {
+            background-color: #313539;
+            border-color: #343a40;
+        }
+
+        .dark-mode .navbar-brand .text, .dark-mode .device-provider {
+            color: #ffffff; /* Makes text white in dark mode */
+        }
+
+        .dark-mode .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .dark-mode .toggle-icon {
+            color: #ffffff; /* White color for the icon in dark mode */
+        }
+
+        /* Toggle Icon Style */
+        .toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 20px; /* Adjust to match the homepage layout */
+            transform: translateY(-50%);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            color: #28609e;
+        }
+
+        /* Adjust the navbar to ensure proper positioning */
+        .navbar {
+            position: relative;
+        }
+
+        .translate-button {
+            position: absolute; /* Absolute positioning relative to nearest positioned ancestor (navbar) */
+            right: 150px; /* Distance from the right edge of the navbar */
+            top: 50%; /* Center it vertically */
+            transform: translateY(-40%); /* Offset the y-position to ensure it's perfectly centered */
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar navbar-default navbar-static-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="index.html">
+                <img src="chris_logo.png" alt="ChRIS Logo" class="logo">
+                <span class="text">Edge Device Provisioning</span>
+            </a>
+            <!-- Google Translate Widget -->
+            <div id="google_translate_element" class="translate-button"></div>
+            <script type="text/javascript">
+                function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'es', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                }
+            </script>
+            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        </div>
+        <a href="add_edge_device.html" class="btn btn-primary navbar-button-style navbar-back-button">Back</a>
+        <i class="fas fa-lightbulb toggle-icon" onclick="toggleDarkMode()"></i>
+    </header>
+    <script src="firebase.js" defer></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+            if (isDarkModeEnabled) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                    element.classList.add('dark-mode');
+                });
+            }
+
+        });
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    
+            document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+                element.classList.toggle('dark-mode');
+            });
+        } 
+
+    </script>
+</body>
+</html>

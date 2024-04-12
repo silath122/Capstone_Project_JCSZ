@@ -25,6 +25,7 @@
         .navbar-brand .text {
             display: inline-block; /* Make text inline */
         }
+
         /* General button style */
         .navbar-button-style {
             color: #fff !important; /* Set text color to white */
@@ -66,7 +67,7 @@
         }
 
         .container {
-          width: 50%;
+          width: 80%;
         }
 
         header {
@@ -85,6 +86,7 @@
         .dropdown.open .dropdown-menu {
             display: block; /* Show dropdown menu when clicked open */
         }
+
         /* Dark Mode Styles */
         .dark-mode {
             background-color: #343a40;
@@ -95,6 +97,7 @@
             background-color: #313539;
             border-color: #343a40;
         }
+
         .dark-mode .navbar-brand .text, .dark-mode .device-provider {
             color: #ffffff; /* Makes text white in dark mode */
         }
@@ -124,6 +127,7 @@
         .navbar {
             position: relative;
         }
+
         .pf-c-backdrop {
           position: fixed;
           top: 0;
@@ -141,22 +145,27 @@
           transform: translate(-50%, -50%);
           z-index: 1050; /* Modal should be on top of the backdrop */
           border: 5px solid white;
-          padding: 20px;
+          padding-left: 20px;
+          padding-right: 20px;
+          padding-bottom: 15px;
           background: white;
           color: black;
-          border-radius: 10px;        }
+        }
+
+        .pf-c-modal-box__title-icon {
+            color: #3e8635;
+        }
 
         .pf-c-modal-box__footer {
           padding-top: 10px;
         }
+
         .translate-button {
             position: absolute; /* Absolute positioning relative to nearest positioned ancestor (navbar) */
             right: 150px; /* Distance from the right edge of the navbar */
             top: 50%; /* Center it vertically */
             transform: translateY(-40%); /* Offset the y-position to ensure it's perfectly centered */
-        }
-
-        
+        }      
     </style>
 </head>
 <body>
@@ -207,14 +216,21 @@
     <div class="pf-c-backdrop" hidden id="modalBackdrop">
       <div class="pf-c-modal-box" role="dialog" aria-modal="true" id="provisionModal">
           <header class="pf-c-modal-box__header">
-              <h1 class="pf-c-modal-box__title">Device added successfully!</h1>
+              <h1 class="pf-c-modal-box__title pf-m-icon" id="success-alert-title">
+                <span class="pf-c-modal-box__title-icon">
+                    <i class="fas fa-fw fa-check-circle" aria-hidden="true"></i>
+                </span>
+                <span class="pf-c-modal-box__title-text" style="font-weight: 500;">Device added successfully!</span>
+            </h1>
           </header>
           <div class="pf-c-modal-box__body">
               Do you want to provision the device?
           </div>
           <footer class="pf-c-modal-box__footer">
-              <button class="pf-c-button pf-m-primary" id="provisionYes">Yes</button>
-              <button class="pf-c-button pf-m-secondary" id="provisionNo">No</button>
+            <a href="provision_device.html" style="color: black;">
+                <button class="pf-c-button pf-m-primary" id="provisionYes">Provision Device</button>
+            </a>
+              <button class="pf-c-button pf-m-secondary" id="provisionNo">Cancel</button>
           </footer>
       </div>
   </div>
