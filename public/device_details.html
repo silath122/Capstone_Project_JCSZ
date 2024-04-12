@@ -445,14 +445,20 @@
         });
 
 // Add your GitHub Personal Access Token here
-const githubToken = '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';
+const githubToken = 'token';
 
 const repoOwner = 'juliakempton'; // Replace with the owner of the repository
 const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
 const prTitle = 'New Pull Request'; // Title of the pull request
 const prBody = 'This is a new pull request created using the GitHub API.'; // Body of the pull request
 const fileContent = 'This is a new file added via API.';
+
 async function createDeviceBranch(deviceName) {
+
+    if (githubToken === 'token') {
+        alert('Please enter a valid GitHub token.');
+        return;
+    }
     const repoOwner = 'juliakempton'; // Replace with the owner of the repository
     const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
     // Fetch the latest commit SHA of the main branch

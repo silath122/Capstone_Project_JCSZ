@@ -135,8 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Event listener for 'Yes' button to provision the device
             document.getElementById('provisionYes').addEventListener('click', async () => {
-                await createDeviceBranch(deviceName); // Provisioning or related actions
                 hideModal();
+                await createDeviceBranch(deviceName); // Provisioning or related actions
             });
 
             // Event listener for 'No' button to close the modal
@@ -156,6 +156,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const githubToken = 'token';
 
         async function createDeviceBranch(deviceName) {
+
+            if (githubToken === 'token') {
+              alert('Please enter a valid GitHub token.');
+              return;
+            }
+
             const repoOwner = 'juliakempton'; // Replace with the owner of the repository
             const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
 
@@ -352,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // Fetch edge devices from Firestore or cache
-async function fetchEdgeDevices() {
+async function fetchEdgeDevices(forceRefresh = false) {
   var container = document.getElementById("edge-devices-container");
   if (!container) return;
 
@@ -361,23 +367,21 @@ async function fetchEdgeDevices() {
   var devices = [];
   var cacheLastUpdate = localStorage.getItem("lastUpdateTime"); // see when was the last time data was added
   var metadataRef = db.collection("metadata").doc("lastUpdate");
+
   try {
       var metadataSnapshot = await metadataRef.get();
       var metadata = metadataSnapshot.data();
-      if (metadata && metadata.lastUpdate && cacheLastUpdate) {
+      if (!forceRefresh && metadata && metadata.lastUpdate && cacheLastUpdate) {
           var databaseLastUpdate = metadata.lastUpdate.toMillis();
 
           if (databaseLastUpdate < parseInt(cacheLastUpdate, 10)) {
               devices = JSON.parse(localStorage.getItem("edge-devices") || "[]");
           } else {
-              var snapshot = await db.collection("edge-devices").get();
-              snapshot.forEach(doc => {
-                  devices.push(doc.data());
-              });
-              localStorage.setItem("edge-devices", JSON.stringify(devices));
-              localStorage.setItem("lastUpdateTime", Date.now().toString());
+              forceRefresh = true;
           }
-      } else {
+      }
+
+      if (forceRefresh) {
           var snapshot = await db.collection("edge-devices").get();
           snapshot.forEach(doc => {
               devices.push(doc.data());
@@ -385,58 +389,60 @@ async function fetchEdgeDevices() {
           localStorage.setItem("edge-devices", JSON.stringify(devices));
           localStorage.setItem("lastUpdateTime", Date.now().toString());
       }
+
   } catch (error) {
       console.error("Error fetching edge devices: ", error);
   }
 
+  // Continue with the existing logic to display devices...
   devices.forEach(deviceData => {
-      var deviceName = deviceData.name;
-      var deviceProvider = deviceData.provider;
+    var deviceName = deviceData.name;
+    var deviceProvider = deviceData.provider;
 
-      var deviceDiv = document.createElement("div");
-      deviceDiv.classList.add("device-card");
-      deviceDiv.onclick = () => {
-        window.location.href = "device_details.html?device=" + deviceName;
-      };
+    var deviceDiv = document.createElement("div");
+    deviceDiv.classList.add("device-card");
+    deviceDiv.onclick = () => {
+      window.location.href = "device_details.html?device=" + deviceName;
+    };
 
-      var deviceImg = document.createElement("img");
-      var deviceNameVar = document.createElement("p");
-      deviceNameVar.classList.add("device-name");
-      var deviceProviderVar = document.createElement("p");
-      deviceProviderVar.classList.add("device-provider");
+    var deviceImg = document.createElement("img");
+    var deviceNameVar = document.createElement("p");
+    deviceNameVar.classList.add("device-name");
+    var deviceProviderVar = document.createElement("p");
+    deviceProviderVar.classList.add("device-provider");
 
-      var deviceLink = document.createElement("a");
-      deviceLink.href = "device_details.html?device=" + deviceName;
+    var deviceLink = document.createElement("a");
+    deviceLink.href = "device_details.html?device=" + deviceName;
 
-      // Set image URL from cache or default
-      var cachedImage = localStorage.getItem(deviceName + "_image");
-      if (cachedImage) {
-          deviceImg.src = cachedImage;
-      } else {
-          db.collection("provider-image-links").doc(deviceProvider).get().then((providerDoc) => {
-              if (providerDoc.exists) {
-                  var providerData = providerDoc.data();
-                  var providerImage = providerData.imageLink;
-                  deviceImg.src = providerImage;
-                  localStorage.setItem(deviceName + "_image", providerImage); // Cache image
-              } else {
-                  deviceImg.src = "https://firebasestorage.googleapis.com/v0/b/edge--devices-for-chrisinabox.appspot.com/o/no_image.png?alt=media&token=4692339f-7f88-4a05-9654-9c27d220ff42";
-              }
-          }).catch((error) => {
-              console.error("Error fetching provider image link: ", error);
-          });
-      }
+    // Set image URL from cache or default
+    var cachedImage = localStorage.getItem(deviceName + "_image");
+    if (cachedImage) {
+        deviceImg.src = cachedImage;
+    } else {
+        db.collection("provider-image-links").doc(deviceProvider).get().then((providerDoc) => {
+            if (providerDoc.exists) {
+                var providerData = providerDoc.data();
+                var providerImage = providerData.imageLink;
+                deviceImg.src = providerImage;
+                localStorage.setItem(deviceName + "_image", providerImage); // Cache image
+            } else {
+                deviceImg.src = "https://firebasestorage.googleapis.com/v0/b/edge--devices-for-chrisinabox.appspot.com/o/no_image.png?alt=media&token=4692339f-7f88-4a05-9654-9c27d220ff42";
+            }
+        }).catch((error) => {
+            console.error("Error fetching provider image link: ", error);
+        });
+    }
 
-      deviceImg.alt = deviceName;
-      deviceNameVar.textContent = "" + deviceName;
-      deviceProviderVar.textContent = "Provider: " + deviceProvider;
+    deviceImg.alt = deviceName;
+    deviceNameVar.textContent = "" + deviceName;
+    deviceProviderVar.textContent = "Provider: " + deviceProvider;
 
-      deviceLink.appendChild(deviceImg);
-      deviceDiv.appendChild(deviceLink);
-      deviceDiv.appendChild(deviceNameVar);
-      deviceDiv.appendChild(deviceProviderVar);
-      container.appendChild(deviceDiv);
-  });
+    deviceLink.appendChild(deviceImg);
+    deviceDiv.appendChild(deviceLink);
+    deviceDiv.appendChild(deviceNameVar);
+    deviceDiv.appendChild(deviceProviderVar);
+    container.appendChild(deviceDiv);
+});
 
   applyFilters(); // Apply filters after fetching devices
 }
@@ -514,6 +520,9 @@ function searchDevices() {
 document.addEventListener('DOMContentLoaded', function () {
     fetchEdgeDevices();
     fetchProviders();
+    document.getElementById('refreshData').addEventListener('click', function () {
+      fetchEdgeDevices(true); // Force refresh from Firestore
+  });
 });
 
 // Function to apply filters based on checkboxes
