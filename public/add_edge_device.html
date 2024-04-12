@@ -166,6 +166,34 @@
             top: 50%; /* Center it vertically */
             transform: translateY(-40%); /* Offset the y-position to ensure it's perfectly centered */
         }      
+
+        .loader {
+          border: 16px solid #f3f3f3;
+          border-radius: 50%;
+          border-top: 16px solid #3498db;
+          width: 120px;
+          height: 120px;
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+          position: fixed; /* or absolute */
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1001; /* Ensure it's above other content */
+      }
+
+      /* Safari */
+      @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+      }
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+
+
     </style>
 </head>
 <body>
@@ -213,6 +241,7 @@
             <button type="submit" class="btn btn-primary navbar-button-style">Submit</button>
         </form>
     </div>
+    <div id="loader" class="loader" hidden></div>
     <div class="pf-c-backdrop" hidden id="modalBackdrop">
       <div class="pf-c-modal-box" role="dialog" aria-modal="true" id="provisionModal">
           <header class="pf-c-modal-box__header">
@@ -227,9 +256,7 @@
               Do you want to provision the device?
           </div>
           <footer class="pf-c-modal-box__footer">
-            <a href="provision_device.html" style="color: black;">
-                <button class="pf-c-button pf-m-primary" id="provisionYes">Provision Device</button>
-            </a>
+              <button class="pf-c-button pf-m-primary" id="provisionYes">Provision Device</button>
               <button class="pf-c-button pf-m-secondary" id="provisionNo">Cancel</button>
           </footer>
       </div>

@@ -156,40 +156,48 @@ document.addEventListener('DOMContentLoaded', function () {
         const githubToken = 'token';
 
         async function createDeviceBranch(deviceName) {
-
-            if (githubToken === 'token') {
-              alert('Please enter a valid GitHub token.');
-              return;
-            }
-
-            const repoOwner = 'juliakempton'; // Replace with the owner of the repository
-            const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-
-            // Fetch the latest commit SHA of the main branch
-            const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
-            const mainBranchResponse = await fetch(mainBranchUrl, {
-                headers: {
-                    Authorization: `token ${githubToken}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            const mainBranchData = await mainBranchResponse.json();
-            const mainBranchSha = mainBranchData.commit.sha;
-
-            // Create a unique branch name based on device name and count
-            const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
-
-            // Create a new branch from the main branch
-            await createBranch(repoOwner, repoName, branchName, mainBranchSha);
-
-            // Create a new file in the devices folder
-            const fileName = `${branchName}.txt`; // Example: "DeviceName_BranchName.txt"
-            await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
-
-            // Create a pull request to merge the new branch with the main branch
-            await createPullRequest(repoOwner, repoName, branchName);
-        }
-
+          const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+          const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+          const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
+          showLoader();
+      
+          try {
+              if (githubToken === 'token') {
+                  hideLoader();
+                  await delay(100); // Wait for 100 milliseconds
+                  alert('Please enter a valid GitHub token.');
+                  return;
+              }
+      
+              const mainBranchResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`, {
+                  headers: {
+                      Authorization: `token ${githubToken}`,
+                      'Content-Type': 'application/json',
+                  },
+              });
+      
+              const mainBranchData = await mainBranchResponse.json();
+              const mainBranchSha = mainBranchData.commit.sha;
+              const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
+      
+              await createBranch(repoOwner, repoName, branchName, mainBranchSha);
+              const fileName = `${branchName}.txt`;
+              await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
+              await createPullRequest(repoOwner, repoName, branchName);
+      
+              hideLoader();
+              await delay(100); // Wait for 100 milliseconds
+              alert("Device provisioned successfully.");
+          } catch (error) {
+              hideLoader();
+              await delay(100); // Wait for 100 milliseconds
+              alert(`Error during device provisioning: ${error}`);
+          }
+      }
+      
+      function delay(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
+      }
         async function createUniqueBranchName(repoOwner, repoName, deviceName) {
             const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
 
@@ -303,11 +311,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify(requestData),
                 });
-                if (response.ok) {
-                    alert("Device provisioned successfully.");
-                } else {
-                    console.error('Error creating pull request:', responseData.message);
-                }
             } catch (error) {
                 console.error('Error creating pull request:', error);
             }
@@ -355,6 +358,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+
+function showLoader() {
+  document.getElementById('loader').hidden = false;
+}
+
+function hideLoader() {
+  document.getElementById('loader').hidden = true;
+}
 
 
 // Fetch edge devices from Firestore or cache

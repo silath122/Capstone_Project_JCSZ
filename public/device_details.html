@@ -205,6 +205,33 @@
             width: 175px; /* Ensure consistent button width */
             /* Other styles remain unchanged */
         }
+
+        .loader {
+          border: 16px solid #f3f3f3;
+          border-radius: 50%;
+          border-top: 16px solid #3498db;
+          width: 120px;
+          height: 120px;
+          -webkit-animation: spin 2s linear infinite; /* Safari */
+          animation: spin 2s linear infinite;
+          position: fixed; /* or absolute */
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1001; /* Ensure it's above other content */
+      }
+
+      /* Safari */
+      @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+      }
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+
     </style>
 </head>
 <body>
@@ -226,6 +253,7 @@
         <a href="select_edge_device.html" class="btn btn-primary navbar-button-style navbar-back-button">Back</a>
         <i class="fas fa-lightbulb toggle-icon" onclick="toggleDarkMode()"></i>
     </header>
+    <div id="loader" class="loader" hidden></div>
     <div class="device-details-container">
         <div class="device-details" id="deviceDetails">
             <!-- Device details will be dynamically inserted here -->
@@ -251,7 +279,6 @@
                     <label for="editProductSpecs">Product Specifications Link:</label>
                     <input type="text" id="editProductSpecs" placeholder="Product Specifications Link">
                 </div>
-                
                 <h3>Certifications</h3>
                 <!-- Input fields for editing certifications -->
                 <div id="certifications" class="form-group">
@@ -352,8 +379,6 @@
                     const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
                     provisionDeviceBtn.addEventListener('click', function () {
                     createDeviceBranch(deviceName);
-                        // Redirect to provision_device.html
-                        //window.location.href = 'provision_device.html';
                     });
 
                     // Event listener for edit device button
@@ -444,6 +469,14 @@
 
         });
 
+function showLoader() {
+  document.getElementById('loader').hidden = false;
+}
+
+function hideLoader() {
+  document.getElementById('loader').hidden = true;
+}
+
 // Add your GitHub Personal Access Token here
 const githubToken = 'token';
 
@@ -454,33 +487,46 @@ const prBody = 'This is a new pull request created using the GitHub API.'; // Bo
 const fileContent = 'This is a new file added via API.';
 
 async function createDeviceBranch(deviceName) {
+    showLoader();
 
-    if (githubToken === 'token') {
-        alert('Please enter a valid GitHub token.');
-        return;
+    try {
+        if (githubToken === 'token') {
+            hideLoader();
+            await delay(100); // Wait for 100 milliseconds
+            alert('Please enter a valid GitHub token.');
+            return;
+        }
+
+        const mainBranchResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`, {
+            headers: {
+                Authorization: `token ${githubToken}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const mainBranchData = await mainBranchResponse.json();
+        const mainBranchSha = mainBranchData.commit.sha;
+        const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
+
+        await createBranch(repoOwner, repoName, branchName, mainBranchSha);
+        const fileName = `${branchName}.txt`;
+        await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
+        await createPullRequest(repoOwner, repoName, branchName);
+
+        hideLoader();
+        await delay(100); // Wait for 100 milliseconds
+        alert("Device provisioned successfully.");
+    } catch (error) {
+        hideLoader();
+        await delay(100); // Wait for 100 milliseconds
+        alert(`Error during device provisioning: ${error}`);
     }
-    const repoOwner = 'juliakempton'; // Replace with the owner of the repository
-    const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-    // Fetch the latest commit SHA of the main branch
-    const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
-    const mainBranchResponse = await fetch(mainBranchUrl, {
-        headers: {
-            Authorization: `token ${githubToken}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    const mainBranchData = await mainBranchResponse.json();
-    const mainBranchSha = mainBranchData.commit.sha;
-    // Create a unique branch name based on device name and count
-    const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
-    // Create a new branch from the main branch
-    await createBranch(repoOwner, repoName, branchName, mainBranchSha);
-    // Create a new file in the devices folder
-    const fileName = `${branchName}.txt`; // Example: "DeviceName_BranchName.txt"
-    await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
-    // Create a pull request to merge the new branch with the main branch
-    await createPullRequest(repoOwner, repoName, branchName);
 }
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function createUniqueBranchName(repoOwner, repoName, deviceName) {
     const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
     try {
@@ -580,11 +626,7 @@ async function createPullRequest(repoOwner, repoName, branchName) {
             },
             body: JSON.stringify(requestData),
         });
-        if (response.ok) {
-            alert("Device provisioned successfully.");
-        } else {
-            console.error('Error creating pull request:', responseData.message);
-        }
+
     } catch (error) {
         console.error('Error creating pull request:', error);
     }
