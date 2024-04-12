@@ -45,12 +45,12 @@
             align-items: center;
         }
         .detail-body {
-            width: 100%; /* Set the body width to match the header */
+            width: 100%; 
         }
         .detail-header img {
-            width: 200px; /* Set the desired width */
-            height: 200px; /* Set the desired height */
-            object-fit: contain; /* Maintain aspect ratio without cropping */
+            width: 200px;
+            height: 200px; 
+            object-fit: contain;
             border-radius: 5px;
         }
         .edit-device-btn {
@@ -98,7 +98,6 @@
         .certifications ul li strong {
             color: #28609e;
         }
-        /* Dropdown styles */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -130,80 +129,70 @@
         .detail-body {
             flex: 1;
         }
-        /* Adjust back button styles */
         .navbar-button-style {
-            color: #fff !important; /* Set text color to white */
-            background-color: #28609e; /* Background color */
-            border-color: #28609e; /* Border color */
-            padding: 5px 15px; /* Smaller padding */
-            font-size: 14px; /* Smaller font size */
-            border-radius: 20px; /* Rounded edges */
-            /* If you need additional styles, add them here */
+            color: #fff !important; 
+            background-color: #28609e; 
+            border-color: #28609e; 
+            padding: 5px 15px; 
+            font-size: 14px; 
+            border-radius: 20px; 
         }
-        /* Specific adjustments for positioning if needed */
         .navbar-back-button, .add-more-btn, .submit-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
         }
         .navbar-back-button {
-            right: 60px; /* Adjust this based on your layout */
+            right: 60px; 
         }
-        
-        /* Hover and focus states can also be generalized */
         .navbar-button-style:hover {
-            background-color: #204d74 !important; /* Override hover color */
+            background-color: #204d74 !important;
             border-color: #204d74 !important;
         }
         .navbar-button-style:focus {
             box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
         }
+
         /* Dark Mode Styles */
         .dark-mode {
             background-color: #343a40;
             color: #ffffff;
         }
-
         .dark-mode .navbar {
             background-color: #313539;
             border-color: #343a40;
         }
         .dark-mode .navbar-brand .text, .dark-mode .device-provider {
-            color: #ffffff; /* Makes text white in dark mode */
+            color: #ffffff; 
         }
         .dark-mode .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
         }
         .dark-mode .toggle-icon {
-            color: #ffffff; /* White color for the icon in dark mode */
+            color: #ffffff;
         }
-
-        /* Toggle Icon Style */
         .toggle-icon {
             position: absolute;
             top: 50%;
-            right: 20px; /* Adjust to match the homepage layout */
+            right: 20px;
             transform: translateY(-50%);
             font-size: 24px;
             cursor: pointer;
             z-index: 1000;
             color: #28609e;
         }
-        /* Adjust the navbar to ensure proper positioning */
         .navbar {
             position: relative;
         }
         .buttons-container {
             display: flex;
-            flex-direction: column; /* Stack buttons vertically */
-            align-items: flex-start; /* Align buttons to the left */
-            gap: 10px; /* Add space between buttons */
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
         }
-        /* Adjust the button styles if necessary */
         .navbar-button-style {
-            width: 175px; /* Ensure consistent button width */
-            /* Other styles remain unchanged */
+            width: 175px; 
         }
 
         .loader {
@@ -212,16 +201,15 @@
           border-top: 16px solid #3498db;
           width: 120px;
           height: 120px;
-          -webkit-animation: spin 2s linear infinite; /* Safari */
+          -webkit-animation: spin 2s linear infinite;
           animation: spin 2s linear infinite;
-          position: fixed; /* or absolute */
+          position: fixed;
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
-          z-index: 1001; /* Ensure it's above other content */
+          z-index: 1001;
       }
 
-      /* Safari */
       @-webkit-keyframes spin {
           0% { -webkit-transform: rotate(0deg); }
           100% { -webkit-transform: rotate(360deg); }
@@ -314,28 +302,28 @@
                     const deviceDetailsHTML = `
                     <div class="detail-header">
                       <img src="${imageUrl}" alt="${deviceData.name}">
-                <div class="buttons-container">
-                      <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
-                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
-                </div>
+                    <div class="buttons-container">
+                          <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                    <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
                     </div>
-                    <div class="detail-body-container">
-                        <div class="detail-body">
-                            <h2>${deviceData.name}</h2>
-                            <p>Provider: ${deviceData.provider}</p>
-                            <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
-                            <div class="certifications">
-                                <div class="dropdown">
-                                    <h3>Certifications</h3>
-                                    <div class="dropdown-content" id="certificationsDropdown">
-                                        <!-- Certifications will be dynamically inserted here -->
+                        </div>
+                        <div class="detail-body-container">
+                            <div class="detail-body">
+                                <h2>${deviceData.name}</h2>
+                                <p>Provider: ${deviceData.provider}</p>
+                                <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                                <div class="certifications">
+                                    <div class="dropdown">
+                                        <h3>Certifications</h3>
+                                        <div class="dropdown-content" id="certificationsDropdown">
+                                            <!-- Certifications will be dynamically inserted here -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
-                        
-                    </div>
-                    `;
+                        `;
 
                     // Insert device details HTML
                     deviceDetailsDiv.innerHTML = deviceDetailsHTML;
@@ -347,7 +335,7 @@
 
                         querySnapshot.forEach((doc) => {
                             const certificationData = doc.data();
-                            const certificationName = doc.id; // Certification document ID is the certification name
+                            const certificationName = doc.id; 
                             const architecture = certificationData.architecture;
                             const product = certificationData.product;
 
@@ -424,8 +412,6 @@
                         const editedProvider = document.getElementById('editProvider').value.trim();
                         const editedProductSpecs = document.getElementById('editProductSpecs').value.trim();
 
-
-
                         // Update device details in the Firebase database
                         devicesRef.update({
                             name: editedDeviceName,
@@ -448,16 +434,13 @@
                             }).then(() => {
                                 // Close the edit device popup
                                 editDevicePopup.style.display = 'none';
-                                // Refresh the page to reflect the updated device details
                                 location.reload();
                             }).catch((error) => {
                                 console.error('Error updating certifications:', error);
-                                // Handle error
                             });
                         })
                         .catch((error) => {
                             console.error('Error updating device details:', error);
-                            // Handle error
                         });
                     });
                 } else {
@@ -466,13 +449,14 @@
             }).catch((error) => {
                 console.error('Error getting device details:', error);
             });
-
         });
 
+// Show loading graphic
 function showLoader() {
   document.getElementById('loader').hidden = false;
 }
 
+// Hide loading graphic
 function hideLoader() {
   document.getElementById('loader').hidden = true;
 }
@@ -480,23 +464,25 @@ function hideLoader() {
 // Add your GitHub Personal Access Token here
 const githubToken = 'token';
 
+// Information about repo for provisioning
 const repoOwner = 'juliakempton'; // Replace with the owner of the repository
 const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
 const prTitle = 'New Pull Request'; // Title of the pull request
 const prBody = 'This is a new pull request created using the GitHub API.'; // Body of the pull request
 const fileContent = 'This is a new file added via API.';
 
+// Create new branch in repo for device
 async function createDeviceBranch(deviceName) {
     showLoader();
-
+    // Check if token was entered
     try {
         if (githubToken === 'token') {
             hideLoader();
-            await delay(100); // Wait for 100 milliseconds
+            await delay(100);
             alert('Please enter a valid GitHub token.');
             return;
         }
-
+        // Get info about main branch
         const mainBranchResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`, {
             headers: {
                 Authorization: `token ${githubToken}`,
@@ -527,6 +513,7 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Create a unique branch name based on device name and count
 async function createUniqueBranchName(repoOwner, repoName, deviceName) {
     const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
     try {
@@ -542,7 +529,7 @@ async function createUniqueBranchName(repoOwner, repoName, deviceName) {
         const branchesData = await branchesResponse.json();
         const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
         const branchCount = deviceBranches.length;
-        // Create a unique branch name based on device name and count
+        // Create branch name
         const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
         return uniqueBranchName;
     } catch (error) {
@@ -550,12 +537,15 @@ async function createUniqueBranchName(repoOwner, repoName, deviceName) {
         return null;
     }
 }
+
+// Create a new branch in the repository
 async function createBranch(repoOwner, repoName, branchName, baseSha) {
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
     const requestData = {
         ref: `refs/heads/${branchName}`,
         sha: baseSha,
     };
+    // Create a new branch
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -572,12 +562,11 @@ async function createBranch(repoOwner, repoName, branchName, baseSha) {
         console.error('Error creating branch:', error);
     }
 }
+
+// Add a file for the device to the branch
 async function addFileToRepo(fileName, fileContent, branchName) {
-    const repoOwner = 'juliakempton'; // Replace with the owner of the repository
-    const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-    const filePath = `devices/${fileName}`; // Specify the file path in the repository
+    const filePath = `devices/${fileName}`;
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-    // Get the current file SHA if it exists
     const getFileUrl = `${apiUrl}?ref=${branchName}`;
     const getFileResponse = await fetch(getFileUrl, {
         headers: {
@@ -588,14 +577,16 @@ async function addFileToRepo(fileName, fileContent, branchName) {
     const getFileData = await getFileResponse.json();
     const fileSha = getFileData.sha;
     const requestData = {
-        message: `Add ${fileName}`, // Commit message
-        content: btoa(fileContent), // Encode file content in base64
-        branch: branchName, // Specify the branch
-        sha: fileSha, // Provide the SHA if the file exists, or null if it's a new file
+        message: `Add ${fileName}`, 
+        content: btoa(fileContent), 
+        branch: branchName, 
+        sha: fileSha, 
     };
+
+    // Create the file
     try {
         const response = await fetch(apiUrl, {
-            method: 'PUT', // Use PUT to update the file
+            method: 'PUT',
             headers: {
                 Authorization: `token ${githubToken}`,
                 'Content-Type': 'application/json',
@@ -609,14 +600,18 @@ async function addFileToRepo(fileName, fileContent, branchName) {
         console.error('Error adding/updating file:', error);
     }
 }
+
+// Create a pull request for the new branch
 async function createPullRequest(repoOwner, repoName, branchName) {
     const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
     const requestData = {
-        title: 'New Pull Request', // Title of the pull request
-        body: 'This is a new pull request created using the GitHub API.', // Body of the pull request
-        head: branchName, // Branch you're merging from
-        base: 'main', // Branch you're merging into
+        title: 'New Pull Request',
+        body: 'This is a new pull request created using the GitHub API.',
+        head: branchName, 
+        base: 'main', 
     };
+
+    // Create a pull request
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -626,29 +621,30 @@ async function createPullRequest(repoOwner, repoName, branchName) {
             },
             body: JSON.stringify(requestData),
         });
-
     } catch (error) {
         console.error('Error creating pull request:', error);
     }
-}
+  }
 
-    document.addEventListener('DOMContentLoaded', () => {
-            const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
-            if (isDarkModeEnabled) {
-                document.body.classList.add('dark-mode');
-                document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
-                    element.classList.add('dark-mode');
-                });
-            }
-        });
-    
-        function toggleDarkMode() {
-            const isDarkMode = document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-    
-            document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
-                element.classList.toggle('dark-mode');
-            });
-        }
+  // Check if dark mode is enabled and make necessary changes
+  document.addEventListener('DOMContentLoaded', () => {
+      const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+      if (isDarkModeEnabled) {
+          document.body.classList.add('dark-mode');
+          document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+              element.classList.add('dark-mode');
+          });
+      }
+  });
 
-    </script>
+  // Change dark mode status
+  function toggleDarkMode() {
+      const isDarkMode = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+
+      document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+          element.classList.toggle('dark-mode');
+      });
+  }
+
+  </script>

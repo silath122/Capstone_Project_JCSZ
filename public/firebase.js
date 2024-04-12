@@ -1,5 +1,4 @@
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDVpVkp6Girl-J_ryQ6oSY409--HKn-LVE",
   authDomain: "edge--devices-for-chrisinabox.firebaseapp.com",
@@ -16,8 +15,6 @@ firebase.initializeApp(firebaseConfig);
 
 // Reference to firestore database
 var db = firebase.firestore();
-
-// Reference to the device providers in your Firebase database
 const deviceProvidersRef = db.collection('provider-image-links');
 
 // Fetch data from firestore and populate the dropdown
@@ -33,7 +30,7 @@ deviceProvidersRef.get().then((querySnapshot) => {
     console.error('Error fetching device providers:', error);
 })
 
-// Function to fetch data either from cache or Firestore
+// Fetch data either from cache or Firestore
 async function fetchWithCache(collectionName) {
     var dataFromCache = localStorage.getItem(collectionName);
     if (dataFromCache) {
@@ -54,23 +51,22 @@ async function fetchWithCache(collectionName) {
     }
 }
 
+// Change last updated time in Firestore
 async function updateLastUpdateTime() {
   const metadataRef = db.collection('metadata').doc('lastUpdate');
   await metadataRef.set({ lastUpdate: firebase.firestore.FieldValue.serverTimestamp() });
 }
 
 
-// Form submission event listener
 document.addEventListener('DOMContentLoaded', function () {
-    
     document.getElementById('deviceForm').addEventListener('submit', async function (event) {
         event.preventDefault();
-        
-
+        // Get device info that is entered
         var deviceName = document.getElementById('deviceName').value.trim();
         var deviceProvider = document.getElementById('deviceProvider').value.trim();
         var deviceProductSpecs = document.getElementById('deviceProductSpecs').value.trim();
 
+        // Make sure all necessary info is entered
         if (deviceName === '' || deviceProvider === '' || deviceProductSpecs == '') {
             alert('Please fill/select in both device type, device software, and the device product specification link.');
             return;
@@ -86,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 provider: deviceProvider,
                 productSpecsLink: deviceProductSpecs
             });
-
+            // Get certifications
             var certifications = [];
             var certificationInputs = document.querySelectorAll('.certification');
             certificationInputs.forEach(function(certInput) {
@@ -114,15 +110,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 certificationInputs[i].remove();
             }
 
-            showModal(); // Call this function to show the modal and backdrop
+            showModal();
 
+            // Show provisioning modal
             function showModal() {
               const modal = document.getElementById('provisionModal');
               const backdrop = document.getElementById('modalBackdrop');
               modal.hidden = false;
               backdrop.hidden = false;
             }
-          
+
+            // Hide provisioning modal
             function hideModal() {
                 const modal = document.getElementById('provisionModal');
                 const backdrop = document.getElementById('modalBackdrop');
@@ -130,41 +128,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 backdrop.hidden = true;
             }
 
-
-            document.getElementById('provisionModal').hidden = false; // Show the modal after successful addition
+            document.getElementById('provisionModal').hidden = false;
 
             // Event listener for 'Yes' button to provision the device
             document.getElementById('provisionYes').addEventListener('click', async () => {
                 hideModal();
-                await createDeviceBranch(deviceName); // Provisioning or related actions
+                await createDeviceBranch(deviceName);
             });
 
             // Event listener for 'No' button to close the modal
             document.getElementById('provisionNo').addEventListener('click', function() {
                 hideModal();
-
             });
 
-            console.log('Device and certifications successfully added to Firestore!');
             updateLastUpdateTime();
         } catch (error) {
-            // Display error message
             alert('Error: Edge device could not be added.');
             console.error('Error adding document: ', error);
         }
-          // Add your GitHub Personal Access Token here
+        
+        // Add your GitHub Personal Access Token here
         const githubToken = 'token';
 
         async function createDeviceBranch(deviceName) {
-          const repoOwner = 'juliakempton'; // Replace with the owner of the repository
-          const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-          const mainBranchUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`;
+          const repoOwner = 'juliakempton';
+          const repoName = 'Edge-Devices-for-chRIS-blank';
           showLoader();
-      
+
+          // Check if token is entered
           try {
               if (githubToken === 'token') {
                   hideLoader();
-                  await delay(100); // Wait for 100 milliseconds
+                  await delay(100);
                   alert('Please enter a valid GitHub token.');
                   return;
               }
@@ -186,11 +181,11 @@ document.addEventListener('DOMContentLoaded', function () {
               await createPullRequest(repoOwner, repoName, branchName);
       
               hideLoader();
-              await delay(100); // Wait for 100 milliseconds
+              await delay(100);
               alert("Device provisioned successfully.");
           } catch (error) {
               hideLoader();
-              await delay(100); // Wait for 100 milliseconds
+              await delay(100);
               alert(`Error during device provisioning: ${error}`);
           }
       }
@@ -198,43 +193,45 @@ document.addEventListener('DOMContentLoaded', function () {
       function delay(ms) {
           return new Promise(resolve => setTimeout(resolve, ms));
       }
-        async function createUniqueBranchName(repoOwner, repoName, deviceName) {
-            const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
+      // Create a unique branch name based on the device name
+      async function createUniqueBranchName(repoOwner, repoName, deviceName) {
+          const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
 
-            try {
-                const branchesResponse = await fetch(branchesUrl, {
-                    headers: {
-                        Authorization: `token ${githubToken}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
+          try {
+              const branchesResponse = await fetch(branchesUrl, {
+                  headers: {
+                      Authorization: `token ${githubToken}`,
+                      'Content-Type': 'application/json',
+                  },
+              });
 
-                if (!branchesResponse.ok) {
-                    throw new Error('Error fetching branches data');
-                }
+              if (!branchesResponse.ok) {
+                  throw new Error('Error fetching branches data');
+              }
 
-                const branchesData = await branchesResponse.json();
+              const branchesData = await branchesResponse.json();
 
-                const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
-                const branchCount = deviceBranches.length;
+              const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
+              const branchCount = deviceBranches.length;
 
-                // Create a unique branch name based on device name and count
-                const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
+              // Create a unique branch name
+              const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
 
-                return uniqueBranchName;
-            } catch (error) {
-                console.error('Error creating unique branch name:', error);
-                return null;
-            }
+              return uniqueBranchName;
+          } catch (error) {
+              console.error('Error creating unique branch name:', error);
+              return null;
+          }
         }
 
+        // Create a branch for the device in the repo
         async function createBranch(repoOwner, repoName, branchName, baseSha) {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
             const requestData = {
                 ref: `refs/heads/${branchName}`,
                 sha: baseSha,
             };
-
+            // Create branch for device
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -252,10 +249,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // Add file for device to branch in repo
         async function addFileToRepo(fileName, fileContent, branchName) {
-            const repoOwner = 'juliakempton'; // Replace with the owner of the repository
-            const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-            const filePath = `devices/${fileName}`; // Specify the file path in the repository
+            const repoOwner = 'juliakempton'; 
+            const repoName = 'Edge-Devices-for-chRIS-blank';
+            const filePath = `devices/${fileName}`; 
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
 
             // Get the current file SHA if it exists
@@ -270,15 +268,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const fileSha = getFileData.sha;
 
             const requestData = {
-                message: `Add ${fileName}`, // Commit message
-                content: btoa(fileContent), // Encode file content in base64
-                branch: branchName, // Specify the branch
-                sha: fileSha, // Provide the SHA if the file exists, or null if it's a new file
+                message: `Add ${fileName}`,
+                content: btoa(fileContent),
+                branch: branchName,
+                sha: fileSha,
             };
 
+            // Add the file to the branch
             try {
                 const response = await fetch(apiUrl, {
-                    method: 'PUT', // Use PUT to update the file
+                    method: 'PUT',
                     headers: {
                         Authorization: `token ${githubToken}`,
                         'Content-Type': 'application/json',
@@ -293,15 +292,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        // Create pull request for file's branch
         async function createPullRequest(repoOwner, repoName, branchName) {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
             const requestData = {
-                title: 'New Pull Request', // Title of the pull request
-                body: 'This is a new pull request created using the GitHub API.', // Body of the pull request
-                head: branchName, // Branch you're merging from
-                base: 'main', // Branch you're merging into
+                title: 'New Pull Request', 
+                body: 'This is a new pull request created using the GitHub API.',
+                head: branchName,
+                base: 'main',
             };
 
+            // Create pull request
             try {
                 const response = await fetch(apiUrl, {
                     method: 'POST',
@@ -334,17 +335,14 @@ document.addEventListener('DOMContentLoaded', function () {
         newCertificationDiv.style.marginTop = '10px';
         newCertificationDiv.style.marginBottom = '10px';
 
-
         certificationsDiv.insertBefore(newCertificationDiv, document.getElementById('addCertification'));
     });
 
     // Event listener for input changes
     document.getElementById('deviceProvider').addEventListener('input', function (event) {
         var selectedProvider = event.target.value.trim();
-        console.log("Selected provider:", selectedProvider); // Log selected provider
-        document.getElementById("providerDropdown").innerText = selectedProvider; // Update button text
+        document.getElementById("providerDropdown").innerText = selectedProvider;
     });
-
 
     // Search devices event listener
     document.querySelector('.search-box').addEventListener('input', function () {
@@ -359,7 +357,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 function showLoader() {
   document.getElementById('loader').hidden = false;
 }
@@ -368,16 +365,16 @@ function hideLoader() {
   document.getElementById('loader').hidden = true;
 }
 
-
 // Fetch edge devices from Firestore or cache
 async function fetchEdgeDevices(forceRefresh = false) {
   var container = document.getElementById("edge-devices-container");
   if (!container) return;
 
-  container.innerHTML = ''; // clears previous content
+  // Clears previous content
+  container.innerHTML = '';
 
   var devices = [];
-  var cacheLastUpdate = localStorage.getItem("lastUpdateTime"); // see when was the last time data was added
+  var cacheLastUpdate = localStorage.getItem("lastUpdateTime");
   var metadataRef = db.collection("metadata").doc("lastUpdate");
 
   try {
@@ -385,7 +382,7 @@ async function fetchEdgeDevices(forceRefresh = false) {
       var metadata = metadataSnapshot.data();
       if (!forceRefresh && metadata && metadata.lastUpdate && cacheLastUpdate) {
           var databaseLastUpdate = metadata.lastUpdate.toMillis();
-
+          // Check if database or cache was updated more recently
           if (databaseLastUpdate < parseInt(cacheLastUpdate, 10)) {
               devices = JSON.parse(localStorage.getItem("edge-devices") || "[]");
           } else {
@@ -406,7 +403,7 @@ async function fetchEdgeDevices(forceRefresh = false) {
       console.error("Error fetching edge devices: ", error);
   }
 
-  // Continue with the existing logic to display devices...
+  // Display device data
   devices.forEach(deviceData => {
     var deviceName = deviceData.name;
     var deviceProvider = deviceData.provider;
@@ -436,7 +433,7 @@ async function fetchEdgeDevices(forceRefresh = false) {
                 var providerData = providerDoc.data();
                 var providerImage = providerData.imageLink;
                 deviceImg.src = providerImage;
-                localStorage.setItem(deviceName + "_image", providerImage); // Cache image
+                localStorage.setItem(deviceName + "_image", providerImage);
             } else {
                 deviceImg.src = "https://firebasestorage.googleapis.com/v0/b/edge--devices-for-chrisinabox.appspot.com/o/no_image.png?alt=media&token=4692339f-7f88-4a05-9654-9c27d220ff42";
             }
@@ -456,7 +453,7 @@ async function fetchEdgeDevices(forceRefresh = false) {
     container.appendChild(deviceDiv);
 });
 
-  applyFilters(); // Apply filters after fetching devices
+  applyFilters();
 }
 
 // Fetch providers from Firestore or cache
@@ -481,7 +478,7 @@ async function fetchProviders() {
 
               var label = document.createElement("label");
               label.htmlFor = providerName;
-              label.textContent = providerName; // Set label text directly
+              label.textContent = providerName;
 
               providerFilterContainer.appendChild(checkbox);
               providerFilterContainer.appendChild(label);
@@ -503,7 +500,7 @@ async function fetchProviders() {
 
           var label = document.createElement("label");
           label.htmlFor = providerName;
-          label.textContent = providerName; // Set label text directly
+          label.textContent = providerName;
 
           providerFilterContainer.appendChild(checkbox);
           providerFilterContainer.appendChild(label);
@@ -512,6 +509,7 @@ async function fetchProviders() {
   }
 }
 
+// Search through devices based on user input
 function searchDevices() {
     var input, filter, devices, deviceName, i;
     input = document.querySelector('.search-box');
@@ -537,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Function to apply filters based on checkboxes
+// Apply filters based on checkboxes
 function applyFilters() {
     var selectedProviders = document.querySelectorAll('.filter-checkbox:checked');
     var selectedProviderNames = Array.from(selectedProviders).map(provider => provider.value);
