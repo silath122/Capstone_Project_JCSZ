@@ -10,26 +10,43 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
     <style>
-        /* Custom CSS for logo */
+        /* Custom CSS for logo image */
         .navbar-brand .logo {
-            width: 30px;
+            width: 40px;
             height: auto;
-            margin-right: 10px;
-            display: inline-block; /* Make logo and text inline */
+            margin-right: 5px;
+            display: inline-block; /* logo and text inline */
         }
-    
+
         .navbar-brand .text {
-            display: inline-block; /* Make text inline */
+            display: inline-block; /* text inline */
         }
-    
-        /* Custom CSS for back button */
         
-    
-        /* Custom CSS to set text color of the button */
-        
-    
-        /* Custom CSS to make the button like the submit button */
-        
+        .navbar-button-style {
+            color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
+        }
+
+        .navbar-button-style:hover {
+            background-color: #204d74 !important;
+            border-color: #204d74 !important;
+        }
+
+        .navbar-button-style:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
+        }
+
+        .navbar-back-button {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
 
         header {
             display: flex;
@@ -104,6 +121,13 @@
             box-sizing: border-box;
         }
 
+        #refreshData {
+            background-color: #f4f1f1;
+            color: black;
+            border:1px black solid;
+            border-radius: 5px;
+        }
+
         #content-container {
             display: flex;
             flex-direction: column;
@@ -118,19 +142,20 @@
             flex-grow: 1;
         }
 
-        #filters {
-            margin-left: 20px;
-        }
-
         #edge-devices {
             flex-grow: 1;
             margin-top: 10px;
+        }
+
+        #filters {
+            margin-left: 20px;
         }
 
         #provider-filters input[type="checkbox"] {
           margin-right: 10px;
         }
 
+        /* Display size scaling */
         @media only screen and (max-width: 400px) {
             #content-container {
                 width: 100vw;
@@ -265,33 +290,6 @@
                 transform: scale(1);
             }
         }
-        .navbar-button-style {
-            color: #fff !important; 
-            background-color: #28609e;
-            border-color: #28609e;
-            padding: 5px 15px; 
-            font-size: 14px;
-            border-radius: 20px; 
-        }
-
-        .navbar-back-button, .edit-device-btn, .provision-device-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .navbar-back-button {
-            right: 60px; 
-        }
-
-        .navbar-button-style:hover {
-            background-color: #204d74 !important;
-            border-color: #204d74 !important;
-        }
-
-        .navbar-button-style:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 96, 158, 0.5);
-        }
 
         /* Dark Mode Styles */
         .dark-mode {
@@ -299,16 +297,25 @@
             color: #ffffff;
         }
 
-        .dark-mode .device-card {
-          background-color: #707070;
-        }
-
         .dark-mode .navbar {
             background-color: #313539;
             border-color: #343a40;
         }
-        .dark-mode .navbar-brand .text, .dark-mode .device-provider {
+
+        .dark-mode .navbar-brand .text {
             color: #ffffff; 
+        }
+
+        .dark-mode .device-card {
+            background-color: #e6e6e6;
+        }
+
+        .dark-mode .device-name {
+            color: #6a6a6a;
+        }
+
+        .dark-mode .device-provider {
+            color: #6a6a6a;
         }
 
         .dark-mode .search-box {
@@ -324,17 +331,10 @@
             color: #ffffff; 
         }
 
-        #refreshData {
-            background-color: #f4f1f1;
-            color: black;
-            border:1px black solid;
-            border-radius: 5px;
-        }
-
         .toggle-icon {
             position: absolute;
             top: 50%;
-            right: 20px;
+            right: 105px;
             transform: translateY(-50%);
             font-size: 24px;
             cursor: pointer;
@@ -345,11 +345,12 @@
         .navbar {
             position: relative;
         }
+
         .translate-button {
-            position: absolute; 
-            right: 150px;
-            top: 50%; 
-            transform: translateY(-40%); 
+            position: absolute;
+            top: 50%;
+            right: 145px;
+            transform: translateY(-40%);
         }
     </style>
 </head>
@@ -414,6 +415,5 @@
             });
         }
     </script>
-    
 </body>
 </html>

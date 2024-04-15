@@ -7,6 +7,28 @@
     <link rel="stylesheet" href="https://unpkg.com/patternfly/dist/css/patternfly.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        /* Custom CSS for logo image */
+        .navbar-brand .logo {
+            width: 40px;
+            height: auto;
+            margin-right: 5px;
+            display: inline-block; /* logo and text inline */
+        }
+
+        .navbar-brand .text {
+            display: inline-block; /* text inline */
+        }
+
+        .navbar-button-style {
+            color: #fff !important; /* Set text color to white */
+            background-color: #28609e; /* Background color */
+            border-color: #28609e; /* Border color */
+            padding: 5px 15px; /* Smaller padding */
+            font-size: 14px; /* Smaller font size */
+            border-radius: 20px; /* Rounded edges */
+            /* If you need additional styles, add them here */
+        }
+
         /* Custom CSS for centering and enlarging buttons */
         .feature-btn-container {
             display: flex;
@@ -20,27 +42,7 @@
             margin-bottom: 20px;
         }
 
-        /* Custom CSS for logo image */
-        .navbar-brand .logo {
-            width: 30px; 
-            height: auto;
-            margin-right: 10px;
-            display: inline-block; /* logo and text inline */
-        }
-
-        .navbar-brand .text {
-            display: inline-block; /* text inline */
-        }
-        .navbar-button-style {
-            color: #fff !important; /* Set text color to white */
-            background-color: #28609e; /* Background color */
-            border-color: #28609e; /* Border color */
-            padding: 5px 15px; /* Smaller padding */
-            font-size: 14px; /* Smaller font size */
-            border-radius: 20px; /* Rounded edges */
-            /* If you need additional styles, add them here */
-        }
-
+        /* Display size scaling for 0-500px */
         @media only screen and (max-width: 500px) {
             .feature-btn-container .btn {
                 font-size: 4vw;
@@ -57,10 +59,10 @@
             background-color: #313539;
             border-color: #343a40;
         }
+
         .dark-mode .navbar-brand .text {
             color: #ffffff; /* Makes text white in dark mode */
         }
-
 
         .dark-mode .jumbotron {
             background-color: #495057;
@@ -71,6 +73,7 @@
             background-color: #007bff;
             border-color: #007bff;
         }
+        
         .dark-mode .toggle-icon {
             color: #ffffff; /* White color for the icon in dark mode */
         }
@@ -91,18 +94,13 @@
         .navbar {
             position: relative; /* Provides a positioning context for absolute-positioned children */
         }
-        
 
         .translate-button {
             position: absolute; /* Absolute positioning relative to nearest positioned ancestor (navbar) */
-            right: 150px; /* Distance from the right edge of the navbar */
             top: 50%; /* Center it vertically */
+            right: 57px; /* Distance from the right edge of the navbar */
             transform: translateY(-40%); /* Offset the y-position to ensure it's perfectly centered */
         }
-
-        /* Adjusted Toggle Icon Style for better positioning */
-
-
     </style>
 </head>
 <body>
@@ -129,7 +127,6 @@
             <h1>Edge Device Provisioning for ChRIS</h1>
             <p>This project aims to make edge device provisioning and medical analytics simpler and more accessible for hospitals in regions with limited resources, supporting the global mission to enhance healthcare services. The open source solution enables a user to go to in order to easily provision an edge device as well as ChRIS software for the edge device.</p>
         </div>
-
         <div class="feature-btn-container">
             <a class="btn btn-primary navbar-button-style" href="select_edge_device.html" role="button">Select Edge Device</a>
             <a class="btn btn-primary navbar-button-style" href="add_edge_device.html" role="button">Add Edge Device</a>
@@ -156,6 +153,5 @@
             });
         }
     </script>
-    
 </body>
 </html>
