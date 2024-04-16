@@ -272,6 +272,10 @@
             transform: translate(-50%, -50%);
             z-index: 1001;
         }
+
+        #certificationsList li {
+          border-bottom: lightgray 2px solid;
+        }
         @-webkit-keyframes spin {
             0% { -webkit-transform: rotate(0deg); }
             100% { -webkit-transform: rotate(360deg); }
@@ -340,433 +344,424 @@
         </div>
     </div>
 
-    <script src="firebase.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get device name from URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const deviceName = urlParams.get('device');
+<script src="firebase.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get device name from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const encodedDeviceName = urlParams.get('device');
+        const deviceName = decodeURIComponent(encodedDeviceName);
 
-            // Reference to Firestore collection
-            const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
-            const certificationsRef = devicesRef.collection('certifications');
-            // Get device details
-            devicesRef.get().then((doc) => {
-                if (doc.exists) {
-                    const deviceData = doc.data();
-                    const deviceDetailsDiv = document.getElementById('deviceDetails');
+        // Reference to Firestore collection
+        const devicesRef = firebase.firestore().collection('edge-devices').doc(deviceName);
+        const certificationsRef = devicesRef.collection('certifications');
+        // Get device details
+        devicesRef.get().then((doc) => {
+            if (doc.exists) {
+                const deviceData = doc.data();
+                const deviceDetailsDiv = document.getElementById('deviceDetails');
 
-                    // Check if cached image exists
-                    const cachedImage = localStorage.getItem(deviceName + '_image');
-                    const imageUrl = cachedImage ? cachedImage : deviceData.image;
+                // Check if cached image exists
+                const cachedImage = localStorage.getItem(deviceName + '_image');
+                const imageUrl = cachedImage ? cachedImage : deviceData.image;
 
-                    // Construct device details HTML
-                    const deviceDetailsHTML = `
-                    <div class="detail-header">
-                      <img src="${imageUrl}" alt="${deviceData.name}">
-                    <div class="buttons-container">
-                          <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
-                    <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                // Construct device details HTML
+                const deviceDetailsHTML = `
+                <div class="detail-header">
+                  <img src="${imageUrl}" alt="${deviceData.name}">
+                <div class="buttons-container">
+                      <button id="editDeviceBtn" class="btn btn-primary navbar-button-style">Edit Device</button>
+                <button id="provisionDeviceBtn" class="btn btn-primary navbar-button-style">Provision Device</button>
+                </div>
                     </div>
-                        </div>
-                        <div class="detail-body-container">
-                            <div class="detail-body">
-                                <h2>${deviceData.name}</h2>
-                                <p>Provider: ${deviceData.provider}</p>
-                                <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
-                                <div class="certifications">
-                                    <div class="dropdown">
-                                        <h3>Certifications</h3>
-                                        <div class="dropdown-content" id="certificationsDropdown">
-                                            <!-- Certifications will be dynamically inserted here -->
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="detail-body-container">
+                        <div class="detail-body">
+                            <h2><strong>${deviceData.name}</strong></h2>
+                            <p>Provider: ${deviceData.provider}</p>
+                            <p><a href="${deviceData.productSpecsLink}" target="_blank">Product Specifications</a></p>
+                            <div class="certifications">
+                                <h3>Certifications</h3>
+                                <ul id="certificationsList"></ul>
                             </div>
-                            
                         </div>
-                        `;
+                        
+                    </div>
+                    `;
 
-                    // Insert device details HTML
-                    deviceDetailsDiv.innerHTML = deviceDetailsHTML;
+                // Insert device details HTML
+                deviceDetailsDiv.innerHTML = deviceDetailsHTML;
 
-                    // Get certifications
-                    certificationsRef.get().then((querySnapshot) => {
-                        const certificationsDropdown = document.getElementById('certificationsDropdown');
-                        const certificationDiv = document.getElementById('certifications');
+                // Get certifications
+                certificationsRef.get().then((querySnapshot) => {
+                    const certificationsDropdown = document.getElementById('certificationsDropdown');
+                    const certificationDiv = document.getElementById('certifications');
 
-                        querySnapshot.forEach((doc) => {
-                            const certificationData = doc.data();
-                            const certificationName = doc.id; 
-                            const architecture = certificationData.architecture;
-                            const product = certificationData.product;
-
-                            // Create dropdown item for each certification
-                            const certificationItem = document.createElement('a');
-                            certificationItem.innerHTML = `
-                                <strong>${certificationName}</strong><br>
-                                Architecture: ${architecture}<br>
-                                Product: ${product}
+                    querySnapshot.forEach((doc) => {
+                      const certificationData = doc.data();
+                            const listItem = document.createElement('li');
+                            listItem.innerHTML = `
+                                <strong>${doc.id}</strong><br>
+                                Architecture: ${certificationData.architecture}<br>
                             `;
-                            certificationsDropdown.appendChild(certificationItem);
-                            
-                            // Create inputs for each certification in edit popup
-                             const certificationInputsHTML = `
-            <div class="certification" id="${doc.id}">
-                <label for="${doc.id}_product">Product:</label>
-                <input type="text" id="${doc.id}_product" value="${certificationData.product}">
-                <label for="${doc.id}_architecture">Architecture:</label>
-                <input type="text" id="${doc.id}_architecture" value="${certificationData.architecture}">
-            </div>
-        `;
-                            certificationDiv.innerHTML += certificationInputsHTML;
+                            certificationsList.appendChild(listItem);
+                        // Create inputs for each certification in edit popup
+                          const certificationInputsHTML = `
+                            <div class="certification" id="${doc.id}">
+                                <label for="${doc.id}_product">Product:</label>
+                                <input type="text" id="${doc.id}_product" value="${certificationData.product}">
+                                <label for="${doc.id}_architecture">Architecture:</label>
+                                <input type="text" id="${doc.id}_architecture" value="${certificationData.architecture}">
+                            </div>
+                        `;
+                        certificationDiv.innerHTML += certificationInputsHTML;
+                    });
+                }).catch((error) => {
+                    console.error('Error getting certifications:', error);
+                });
+
+                // Add event listener to the "Provision Device" button
+                const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
+                provisionDeviceBtn.addEventListener('click', function () {
+                createDeviceBranch(deviceName);
+                });
+
+                // Event listener for edit device button
+                const editDeviceBtn = document.getElementById('editDeviceBtn');
+                const overlay = document.getElementById('overlay');
+
+                editDeviceBtn.addEventListener('click', function () {
+                    // Display the edit device popup
+                    editDevicePopup.style.display = 'block';
+                    overlay.style.display = 'block'; // Show the overlay
+
+                    // Input fields with current device details
+                    document.getElementById('editDeviceName').value = deviceData.name;
+                    document.getElementById('editProvider').value = deviceData.provider;
+                    document.getElementById('editProductSpecs').value = deviceData.productSpecsLink;
+                });
+
+                document.getElementById('addCertBtn').addEventListener('click', function() {
+                const certificationsDiv = document.getElementById('certifications');
+                const newIndex = document.querySelectorAll('.certification').length;
+                const newCertHTML = `
+                    <div class="certification" id="newCert_${newIndex}">
+                        <label for="product_new_${newIndex}">Product:</label>
+                        <input type="text" id="product_new_${newIndex}" placeholder="Product Name">
+                        <label for="architecture_new_${newIndex}">Architecture:</label>
+                        <input type="text" id="architecture_new_${newIndex}" placeholder="Architecture">
+                    </div>
+                `;
+                certificationsDiv.innerHTML += newCertHTML;
+                });
+
+                document.getElementById('editSubmitBtn').addEventListener('click', async function() {
+                const newName = document.getElementById('editDeviceName').value.trim();
+                const newProvider = document.getElementById('editProvider').value.trim();
+                const newSpecsLink = document.getElementById('editProductSpecs').value.trim();
+                const oldImage = document.querySelector('.detail-header img').src;  // Capture the existing image source
+
+                // Handle changes in device certifications
+                const certificationContainers = document.querySelectorAll('.certification');
+                const certificationsData = [];
+
+                certificationContainers.forEach(certification => {
+                    const inputs = certification.querySelectorAll('input[type="text"]');
+                    const productInput = inputs[0];
+                    const architectureInput = inputs[1];
+
+                    certificationsData.push({
+                        oldId: certification.id, // Ensure this ID is actually set in your HTML
+                        newId: productInput.value.trim(), // Trim to avoid whitespace issues
+                        product: productInput.value.trim(),
+                        architecture: architectureInput.value.trim()
+                    });
+                });
+
+                // Update Firestore data
+                showLoader(); // Show loading animation
+                try {
+                    const deviceRef = deviceName !== newName ? firebase.firestore().collection('edge-devices').doc(newName) : devicesRef;
+
+                    if (deviceName !== newName) {
+                        // Create new device with updated details and delete old one
+                        await deviceRef.set({
+                            name: newName,
+                            provider: newProvider,
+                            productSpecsLink: newSpecsLink,
+                            image: oldImage  // Ensure the image attribute is included
                         });
-                    }).catch((error) => {
-                        console.error('Error getting certifications:', error);
+                        await devicesRef.delete();
+                    } else {
+                        // Update existing device details
+                        await deviceRef.update({
+                            provider: newProvider,
+                            productSpecsLink: newSpecsLink,
+                            image: oldImage  // Update the image attribute even if not changing the device name
+                        });
+                    }
+
+                // Additionally, gather new certifications
+                document.querySelectorAll('.certification[id^="newCert_"]').forEach(function(newCert) {
+                const productInput = newCert.querySelector('input[id^="product_new_"]');
+                const architectureInput = newCert.querySelector('input[id^="architecture_new_"]');
+                if (productInput && architectureInput && productInput.value && architectureInput.value) {
+                    certificationsData.push({
+                        newId: productInput.value.trim(),
+                        product: productInput.value.trim(),
+                        architecture: architectureInput.value.trim()
                     });
-
-                    // Add event listener to the "Provision Device" button
-                    const provisionDeviceBtn = document.getElementById('provisionDeviceBtn');
-                    provisionDeviceBtn.addEventListener('click', function () {
-                    createDeviceBranch(deviceName);
-                    });
-
-                    // Event listener for edit device button
-                    const editDeviceBtn = document.getElementById('editDeviceBtn');
-                    const overlay = document.getElementById('overlay');
-
-                    editDeviceBtn.addEventListener('click', function () {
-                        // Display the edit device popup
-                        editDevicePopup.style.display = 'block';
-                        overlay.style.display = 'block'; // Show the overlay
-
-                        // Input fields with current device details
-                        document.getElementById('editDeviceName').value = deviceData.name;
-                        document.getElementById('editProvider').value = deviceData.provider;
-                        document.getElementById('editProductSpecs').value = deviceData.productSpecsLink;
-                    });
-
-                    document.getElementById('addCertBtn').addEventListener('click', function() {
-    const certificationsDiv = document.getElementById('certifications');
-    const newIndex = document.querySelectorAll('.certification').length;
-    const newCertHTML = `
-        <div class="certification" id="newCert_${newIndex}">
-            <label for="product_new_${newIndex}">Product:</label>
-            <input type="text" id="product_new_${newIndex}" placeholder="Product Name">
-            <label for="architecture_new_${newIndex}">Architecture:</label>
-            <input type="text" id="architecture_new_${newIndex}" placeholder="Architecture">
-        </div>
-    `;
-    certificationsDiv.innerHTML += newCertHTML;
-});
-
-                    document.getElementById('editSubmitBtn').addEventListener('click', async function() {
-    const newName = document.getElementById('editDeviceName').value.trim();
-    const newProvider = document.getElementById('editProvider').value.trim();
-    const newSpecsLink = document.getElementById('editProductSpecs').value.trim();
-    const oldImage = document.querySelector('.detail-header img').src;  // Capture the existing image source
-
-    // Handle changes in device certifications
-    const certificationContainers = document.querySelectorAll('.certification');
-    const certificationsData = [];
-
-    certificationContainers.forEach(certification => {
-        const inputs = certification.querySelectorAll('input[type="text"]');
-        const productInput = inputs[0];
-        const architectureInput = inputs[1];
-
-        certificationsData.push({
-            oldId: certification.id, // Ensure this ID is actually set in your HTML
-            newId: productInput.value.trim(), // Trim to avoid whitespace issues
-            product: productInput.value.trim(),
-            architecture: architectureInput.value.trim()
-        });
-    });
-
-    // Update Firestore data
-    showLoader(); // Show loading animation
-    try {
-        const deviceRef = deviceName !== newName ? firebase.firestore().collection('edge-devices').doc(newName) : devicesRef;
-
-        if (deviceName !== newName) {
-            // Create new device with updated details and delete old one
-            await deviceRef.set({
-                name: newName,
-                provider: newProvider,
-                productSpecsLink: newSpecsLink,
-                image: oldImage  // Ensure the image attribute is included
-            });
-            await devicesRef.delete();
-        } else {
-            // Update existing device details
-            await deviceRef.update({
-                provider: newProvider,
-                productSpecsLink: newSpecsLink,
-                image: oldImage  // Update the image attribute even if not changing the device name
-            });
-        }
-
-        // Additionally, gather new certifications
-        document.querySelectorAll('.certification[id^="newCert_"]').forEach(function(newCert) {
-            const productInput = newCert.querySelector('input[id^="product_new_"]');
-            const architectureInput = newCert.querySelector('input[id^="architecture_new_"]');
-            if (productInput && architectureInput && productInput.value && architectureInput.value) {
-                certificationsData.push({
-                    newId: productInput.value.trim(),
-                    product: productInput.value.trim(),
-                    architecture: architectureInput.value.trim()
+                  }
                 });
-            }
-        });
 
-        // Update certifications
-        const certificationsRef = deviceRef.collection('certifications');
-        for (const cert of certificationsData) {
-            if (!cert.oldId || cert.oldId !== cert.newId) {
-                await certificationsRef.doc(cert.newId).set({
-                    product: cert.product,
-                    architecture: cert.architecture
-                });
-            }
-            if (cert.oldId && cert.oldId !== cert.newId) {
-                await certificationsRef.doc(cert.oldId).delete(); // Ensure deletion happens if IDs differ
-            }
-            if (cert.newId) {
-                await certificationsRef.doc(cert.newId).set({
-                    product: cert.product,
-                    architecture: cert.architecture
-                });
-            } else {
-                console.error("Invalid new ID for certification:", cert);
-            }
-        }
-
-        alert('Device details updated successfully!');
-        editDevicePopup.style.display = 'none'; // Close the popup
-        // Redirect or refresh appropriately
-        if (deviceName !== newName) {
-            window.location.href = `device_details.html?device=${encodeURIComponent(newName)}`;
-        } else {
-            window.location.reload();
-        }
-    } catch (error) {
-        console.error('Failed to update device:', error);
-        alert('Failed to update device details.');
-    } finally {
-        hideLoader(); // Hide loading animation
-    }
-});
-
-
-                    // Event listener for closing the edit device popup
-                    const closePopupBtn = editDevicePopup.querySelector('.close');
-                    closePopupBtn.addEventListener('click', function () {
-                        // Close the edit device popup
-                        editDevicePopup.style.display = 'none';
-                        overlay.style.display = 'none'; // Hide the overlay
-
+              // Update certifications
+              const certificationsRef = deviceRef.collection('certifications');
+              for (const cert of certificationsData) {
+                if (!cert.oldId || cert.oldId !== cert.newId) {
+                  await certificationsRef.doc(cert.newId).set({
+                      product: cert.product,
+                      architecture: cert.architecture
+                  });
+                }
+                if (cert.oldId && cert.oldId !== cert.newId) {
+                    await certificationsRef.doc(cert.oldId).delete(); // Ensure deletion happens if IDs differ
+                }
+                if (cert.newId) {
+                    await certificationsRef.doc(cert.newId).set({
+                        product: cert.product,
+                        architecture: cert.architecture
                     });
                 } else {
-                    console.error('Device not found');
-                }
-            }).catch((error) => {
-                console.error('Error getting device details:', error);
-            });
-        });
-
-// Show loading graphic
-function showLoader() {
-  document.getElementById('loader').hidden = false;
-}
-
-// Hide loading graphic
-function hideLoader() {
-  document.getElementById('loader').hidden = true;
-}
-
-// Add your GitHub Personal Access Token here
-const githubToken = 'token';
-
-// Information about repo for provisioning
-const repoOwner = 'juliakempton'; // Replace with the owner of the repository
-const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
-const prTitle = 'New Pull Request'; // Title of the pull request
-const prBody = 'This is a new pull request created using the GitHub API.'; // Body of the pull request
-const fileContent = 'This is a new file added via API.';
-
-// Create new branch in repo for device
-async function createDeviceBranch(deviceName) {
-    showLoader();
-    // Check if token was entered
-    try {
-        if (githubToken === 'token') {
-            hideLoader();
-            await delay(100);
-            alert('Please enter a valid GitHub token.');
-            return;
+                    console.error("Invalid new ID for certification:", cert);
+              }
+            }
+            const metadataRef = db.collection('metadata').doc('lastUpdate');
+            await metadataRef.set({ lastUpdate: firebase.firestore.FieldValue.serverTimestamp() });
+            alert('Device details updated successfully!');
+            editDevicePopup.style.display = 'none'; // Close the popup
+            // Redirect or refresh appropriately
+            if (deviceName !== newName) {
+                window.location.href = `device_details.html?device=${encodeURIComponent(newName)}`;
+            } else {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Failed to update device:', error);
+            alert('Failed to update device details.');
+        } finally {
+            hideLoader(); // Hide loading animation
         }
-        // Get info about main branch
-        const mainBranchResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`, {
-            headers: {
-                Authorization: `token ${githubToken}`,
-                'Content-Type': 'application/json',
-            },
         });
 
-        const mainBranchData = await mainBranchResponse.json();
-        const mainBranchSha = mainBranchData.commit.sha;
-        const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
+            // Event listener for closing the edit device popup
+            const closePopupBtn = editDevicePopup.querySelector('.close');
+            closePopupBtn.addEventListener('click', function () {
+                // Close the edit device popup
+                editDevicePopup.style.display = 'none';
+                overlay.style.display = 'none'; // Hide the overlay
 
-        await createBranch(repoOwner, repoName, branchName, mainBranchSha);
-        const fileName = `${branchName}.txt`;
-        await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
-        await createPullRequest(repoOwner, repoName, branchName);
-
-        hideLoader();
-        await delay(100); // Wait for 100 milliseconds
-        alert("Device provisioned successfully.");
-    } catch (error) {
-        hideLoader();
-        await delay(100); // Wait for 100 milliseconds
-        alert(`Error during device provisioning: ${error}`);
-    }
-}
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// Create a unique branch name based on device name and count
-async function createUniqueBranchName(repoOwner, repoName, deviceName) {
-    const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
-    try {
-        const branchesResponse = await fetch(branchesUrl, {
-            headers: {
-                Authorization: `token ${githubToken}`,
-                'Content-Type': 'application/json',
-            },
+                });
+            } else {
+                console.error('Device not found');
+            }
+        }).catch((error) => {
+            console.error('Error getting device details:', error);
         });
-        if (!branchesResponse.ok) {
-            throw new Error('Error fetching branches data');
-        }
-        const branchesData = await branchesResponse.json();
-        const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
-        const branchCount = deviceBranches.length;
-        // Create branch name
-        const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
-        return uniqueBranchName;
-    } catch (error) {
-        console.error('Error creating unique branch name:', error);
-        return null;
-    }
-}
-
-// Create a new branch in the repository
-async function createBranch(repoOwner, repoName, branchName, baseSha) {
-    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
-    const requestData = {
-        ref: `refs/heads/${branchName}`,
-        sha: baseSha,
-    };
-    // Create a new branch
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                Authorization: `token ${githubToken}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        });
-        if (!response.ok) {
-            console.error('Error creating branch:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error creating branch:', error);
-    }
-}
-
-// Add a file for the device to the branch
-async function addFileToRepo(fileName, fileContent, branchName) {
-    const filePath = `devices/${fileName}`;
-    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-    const getFileUrl = `${apiUrl}?ref=${branchName}`;
-    const getFileResponse = await fetch(getFileUrl, {
-        headers: {
-            Authorization: `token ${githubToken}`,
-            'Content-Type': 'application/json',
-        },
     });
-    const getFileData = await getFileResponse.json();
-    const fileSha = getFileData.sha;
-    const requestData = {
-        message: `Add ${fileName}`, 
-        content: btoa(fileContent), 
-        branch: branchName, 
-        sha: fileSha, 
-    };
 
-    // Create the file
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'PUT',
-            headers: {
-                Authorization: `token ${githubToken}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        });
-        if (!response.ok) {
-            console.error('Error adding/updating file:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error adding/updating file:', error);
-    }
-}
+  // Show loading graphic
+  function showLoader() {
+  document.getElementById('loader').hidden = false;
+  }
 
-// Create a pull request for the new branch
-async function createPullRequest(repoOwner, repoName, branchName) {
-    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
-    const requestData = {
-        title: 'New Pull Request',
-        body: 'This is a new pull request created using the GitHub API.',
-        head: branchName, 
-        base: 'main', 
-    };
+  // Hide loading graphic
+  function hideLoader() {
+  document.getElementById('loader').hidden = true;
+  }
 
-    // Create a pull request
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                Authorization: `token ${githubToken}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        });
-    } catch (error) {
-        console.error('Error creating pull request:', error);
-    }
+  // Add your GitHub Personal Access Token here
+  const githubToken = 'token';
+
+  // Information about repo for provisioning
+  const repoOwner = 'juliakempton'; // Replace with the owner of the repository
+  const repoName = 'Edge-Devices-for-chRIS-blank'; // Replace with the name of your repository
+  const prTitle = 'New Pull Request'; // Title of the pull request
+  const prBody = 'This is a new pull request created using the GitHub API.'; // Body of the pull request
+  const fileContent = 'This is a new file added via API.';
+
+  // Create new branch in repo for device
+  async function createDeviceBranch(deviceName) {
+  showLoader();
+  // Check if token was entered
+  try {
+      if (githubToken === 'token') {
+          hideLoader();
+          await delay(100);
+          alert('Please enter a valid GitHub token.');
+          return;
+      }
+      // Get info about main branch
+      const mainBranchResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/branches/main`, {
+          headers: {
+              Authorization: `token ${githubToken}`,
+              'Content-Type': 'application/json',
+          },
+      });
+
+      const mainBranchData = await mainBranchResponse.json();
+      const mainBranchSha = mainBranchData.commit.sha;
+      const branchName = await createUniqueBranchName(repoOwner, repoName, deviceName);
+
+      await createBranch(repoOwner, repoName, branchName, mainBranchSha);
+      const fileName = `${branchName}.txt`;
+      await addFileToRepo(fileName, 'This is a new file added via API.', branchName);
+      await createPullRequest(repoOwner, repoName, branchName);
+
+      hideLoader();
+      await delay(100); // Wait for 100 milliseconds
+      alert("Device provisioned successfully.");
+  } catch (error) {
+      hideLoader();
+      await delay(100); // Wait for 100 milliseconds
+      alert(`Error during device provisioning: ${error}`);
+  }
+  }
+
+  function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Create a unique branch name based on device name and count
+  async function createUniqueBranchName(repoOwner, repoName, deviceName) {
+  const branchesUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/branches`;
+  try {
+      const branchesResponse = await fetch(branchesUrl, {
+          headers: {
+              Authorization: `token ${githubToken}`,
+              'Content-Type': 'application/json',
+          },
+      });
+      if (!branchesResponse.ok) {
+          throw new Error('Error fetching branches data');
+      }
+      const branchesData = await branchesResponse.json();
+      const deviceBranches = branchesData.filter(branch => branch.name.startsWith(deviceName.replace(/\s/g, '_')));
+      const branchCount = deviceBranches.length;
+      // Create branch name
+      const uniqueBranchName = `${deviceName.replace(/\s/g, '_')}_${branchCount + 1}`;
+      return uniqueBranchName;
+  } catch (error) {
+      console.error('Error creating unique branch name:', error);
+      return null;
+  }
+  }
+
+  // Create a new branch in the repository
+  async function createBranch(repoOwner, repoName, branchName, baseSha) {
+  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/git/refs`;
+  const requestData = {
+      ref: `refs/heads/${branchName}`,
+      sha: baseSha,
+  };
+  // Create a new branch
+  try {
+      const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+              Authorization: `token ${githubToken}`,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+      });
+      if (!response.ok) {
+          console.error('Error creating branch:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error creating branch:', error);
+  }
+  }
+
+  // Add a file for the device to the branch
+  async function addFileToRepo(fileName, fileContent, branchName) {
+  const filePath = `devices/${fileName}`;
+  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+  const getFileUrl = `${apiUrl}?ref=${branchName}`;
+  const getFileResponse = await fetch(getFileUrl, {
+      headers: {
+          Authorization: `token ${githubToken}`,
+          'Content-Type': 'application/json',
+      },
+  });
+  const getFileData = await getFileResponse.json();
+  const fileSha = getFileData.sha;
+  const requestData = {
+      message: `Add ${fileName}`, 
+      content: btoa(fileContent), 
+      branch: branchName, 
+      sha: fileSha, 
+  };
+
+  // Create the file
+  try {
+      const response = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+              Authorization: `token ${githubToken}`,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+      });
+      if (!response.ok) {
+          console.error('Error adding/updating file:', response.statusText);
+      }
+  } catch (error) {
+      console.error('Error adding/updating file:', error);
+  }
+  }
+
+  // Create a pull request for the new branch
+  async function createPullRequest(repoOwner, repoName, branchName) {
+  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`;
+  const requestData = {
+      title: 'New Pull Request',
+      body: 'This is a new pull request created using the GitHub API.',
+      head: branchName, 
+      base: 'main', 
+  };
+
+  // Create a pull request
+  try {
+      const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+              Authorization: `token ${githubToken}`,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+      });
+  } catch (error) {
+      console.error('Error creating pull request:', error);
+  }
   }
 
   // Check if dark mode is enabled and make necessary changes
   document.addEventListener('DOMContentLoaded', () => {
-      const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
-      if (isDarkModeEnabled) {
-          document.body.classList.add('dark-mode');
-          document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
-              element.classList.add('dark-mode');
-          });
-      }
+    const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+    if (isDarkModeEnabled) {
+        document.body.classList.add('dark-mode');
+        document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+            element.classList.add('dark-mode');
+        });
+    }
   });
 
   // Change dark mode status
   function toggleDarkMode() {
-      const isDarkMode = document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    const isDarkMode = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
 
-      document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
-          element.classList.toggle('dark-mode');
-      });
+    document.querySelectorAll('.navbar, .btn-primary, .toggle-icon').forEach(element => {
+        element.classList.toggle('dark-mode');
+    });
   }
-  </script>
+
+</script>
