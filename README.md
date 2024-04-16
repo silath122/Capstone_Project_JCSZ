@@ -38,3 +38,11 @@ Start your local server or navigate to https://edge--devices-for-chrisinabox.web
 ## Interacting with the GitHub API
 The GitHub API is used for creating branches, adding files, and creating pull requests when provisioning a device.
 Make sure that you have the correct permissions set in your GitHub PAT to allow repository modifications.
+
+## Contact Information
+For any questions or concerns, please email us:
+* Channing Smith, smithcs@g.cofc.edu, College of Charleston <br />
+* Julia Kempton, kemptonjq@g.cofc.edu, College of Charleston <br />
+* Siah Thomas, thomassl1@g.cofc.edu, College of Charleston <br />
+* Zi Yi Xiao, xiaoz1@g.cofc.edu, College of Charleston <br />
+* Isaiah Stapleton, istaplet@redhat.com, Red Hat <br />
