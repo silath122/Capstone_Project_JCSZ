@@ -120,14 +120,11 @@
         }
         .certifications ul li {
             margin-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
+            border: none;
+            border-top: lightgray 2px solid;
+            padding-top: 15px;
         }
-        .certifications ul li:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
+        
         .certifications ul li strong {
             color: #28609e;
         }
@@ -260,22 +257,19 @@
             display: none;
         }
         .loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            -webkit-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1001;
-        }
-
-        #certificationsList li {
-          border-bottom: lightgray 2px solid;
-        }
+          border: 16px solid #f3f3f3;
+          border-radius: 50%;
+          border-top: 16px solid #3498db;
+          width: 120px;
+          height: 120px;
+          -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+          position: fixed; 
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1001;
+      }
         @-webkit-keyframes spin {
             0% { -webkit-transform: rotate(0deg); }
             100% { -webkit-transform: rotate(360deg); }
@@ -590,9 +584,9 @@
 
   // Create new branch in repo for device
   async function createDeviceBranch(deviceName) {
-  showLoader();
-  // Check if token was entered
-  try {
+    showLoader();
+    // Check if token was entered
+    try {
       if (githubToken === 'token') {
           hideLoader();
           await delay(100);
@@ -624,7 +618,7 @@
       await delay(100); // Wait for 100 milliseconds
       alert(`Error during device provisioning: ${error}`);
   }
-  }
+}
 
   function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));

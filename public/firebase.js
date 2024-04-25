@@ -390,7 +390,7 @@ async function fetchEdgeDevices(forceRefresh = false) {
           }
       }
 
-      if (forceRefresh) {
+      if (forceRefresh || !cacheLastUpdate) {
           var snapshot = await db.collection("edge-devices").get();
           snapshot.forEach(doc => {
               devices.push(doc.data());
